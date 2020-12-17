@@ -5,21 +5,37 @@ import pandas as pd
 from flask import Flask, render_template, request
 from scipy.io import arff
 from io import StringIO
-import main
+import main, preprocess
 
 app=Flask(__name__)
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template("datainput.html")
+    return render_template("index.html")
         
-
 @app.route('/datainput', methods=['GET', 'POST'])
 def datainput():
     arrfurl = "1year.arff"
     rawDfList = main.getRawDfList(arrfurl);
-    return render_template("datainput.html", tables=[rawDfList[0].to_html(classes='table', header="true")])
+    rawDfList[0] = rawDfList[0][rawDfList[0]['Attr1'] > 0.3]  # less value for dataframe
+    Df_missing_stats = main.getMissingStats(rawDfList)
+    return render_template("datainput.html", 
+        tables=[rawDfList[0].to_html(classes='table', header="true")], 
+        missingstats = [Df_missing_stats.to_html(classes="table missing-stats", header="true")])
+
+
+@app.route('/choosedata/<string:chosendata>/<string:chosenimputation>', methods=['GET', 'POST'])
+def chooseData(chosendata, chosenimputation):
+    arrfurl = chosendata + ".arff"
+    rawDfList = main.getRawDfList(arrfurl);
+    if (chosenimputation != "null"):
+        rawDfList = preprocess.meanImputation(rawDfList)
+    rawDfList[0] = rawDfList[0][rawDfList[0]['Attr1'] > 0.3]  # less value for dataframe
+    Df_missing_stats = main.getMissingStats(rawDfList)
+    return render_template("datainput.html", 
+        tables=[rawDfList[0].to_html(classes='table', header="true")], 
+        missingstats = [Df_missing_stats.to_html(classes="table missing-stats", header="true")])
 
 
 @app.route('/datapreprocess', methods=['GET', 'POST'])

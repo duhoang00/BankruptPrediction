@@ -3,11 +3,43 @@
 {% block title %}Trang chủ{% endblock %}
 
 {% block pagecontent %}
-    <div>Tut tut</div>
+<div class="title">Chọn phương pháp</div>
+<div class="method-container mb-3">
+    <p>
+        <label class="radio">
+            <input type="radio" name="method" value="decisiontree" checked>
+            Decision tree
+        </label>
+    </p>
+    <p>
+        <label class="radio">
+            <input type="radio" name="method" value="randomforest">
+            Random forest
+        </label>
+    </p>
+</div>
 
-    <script>
-        document.getElementById("datainput").classList.remove("is-active");
-        document.getElementById("datapreprocess").classList.add("is-active");
-        document.getElementById("dataprocess").classList.remove("is-active");
-    </script>
+<div class="title">Phương pháp training và đánh giá</div>
+<div class="train-test-container mb-3">
+    <label class="radio">
+        <input type="radio" name="traintest" value="split" checked>
+        Train/Test Split
+    </label>
+    <span class="ml-5">Train:</span>
+    <span>
+        <input id="splittrain" class="input is-small" style="width: 5%;" type="number" min="0" max="100" placeholder="Train">
+    </span>
+    <span>Test:</span>
+    <span id="splittest"></span>
+</div>
+
+<p>
+    <button class="button is-dark" id=process-button">Xử lí</button>
+</p>
+
+<script>
+    document.getElementById("datainput").classList.remove("is-active");
+    document.getElementById("datapreprocess").classList.add("is-active");
+    document.getElementById("dataprocess").classList.remove("is-active");
+</script>
 {% endblock %}

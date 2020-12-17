@@ -12,7 +12,7 @@ def getDfList(arrfurl):
 
 def showDataStats(df_list):
     print('show data stats...')
-    showMissingStats(df_list)
+    return showMissingStats(df_list)
     # showMatrix(df_list)
     # showHeatMap(df_list)
 
@@ -35,6 +35,7 @@ def showMissingStats(df_list):
     print('show missing stats...')
     missing_stats = datautils.missing_stats(df_list)
     print(missing_stats)
+    return missing_stats
 
 
 def showMatrix(df_list):

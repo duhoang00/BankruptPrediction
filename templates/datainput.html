@@ -4,40 +4,59 @@
 
 {% block pagecontent %}
 <div>
-  <div class="columns">
-    <div class="column has-text-centered">
-      <button class="button" id="choose-data">Chọn</button>
-      <button class="button" id="show-data">Xem</button>
-      <button class="button" id="show-data-analyze">Phân tích</button>
-    </div>
+  <div class="choose-data-container mb-3" id="choose-data">
+    <div class="title">Chọn dữ liệu</div>
+    <p>
+      <label class="radio">
+        <input type="radio" name="yeardata" value="1year" checked>
+        Các chỉ số tài chính của năm tài chính thứ I và lớp tương ứng chỉ ra kết quả phá sản sau 5 năm
+      </label>
+    </p>
+    <p>
+      <label class="radio">
+        <input type="radio" name="yeardata" value="2year">
+        Các chỉ số tài chính của năm tài chính thứ II và lớp tương ứng chỉ ra kết quả phá sản sau 4 năm
+      </label>
+    </p>
   </div>
 
+  <div class="preprocess-data-container mb-3" id="choose-imputation">
+    <div class="title">Tiền xử lí dữ liệu</div>
+    <p>
+      <label class="radio">
+        <input type="radio" name="imputation" value="mean">
+        Mean imputation
+      </label>
+    </p>
+    <p>
+      <label class="radio">
+        <input type="radio" name="imputation" value="other">
+        Other imputation
+      </label>
+    </p>
+    
+  </div>
+
+  <p class="mb-3">
+    <button class="button is-dark" id="preprocess-button">Xử lí</button>  
+  </p>
+
+  <div class="title">Dữ liệu</div>
   <div class="table-container" style="max-height: 300px; overflow: auto;">
-      {% for table in tables %}
-        {{ table|safe }}
-      {% endfor %}
+    {% for table in tables %}
+    {{ table|safe }}
+    {% endfor %}
 
-      
   </div>
 
-  <div class="modal" id="modal-choose-data">
-    <div class="modal-background"></div>
-    <div class="modal-card">
-      <header class="modal-card-head">
-        <p class="modal-card-title">Chọn dữ liệu</p>
-        <button class="delete" aria-label="close"></button>
-      </header>
-      <section class="modal-card-body">
-        <div class="">
-          <button class="button">test</button>
-        </div>
-      </section>
-      <footer class="modal-card-foot">
-        <button class="button is-success">Lưu</button>
-        <button class="button">Thoát</button>
-      </footer>
-    </div>
+  <div class="title">Phân tích dữ liệu</div>
+  <div class="missing-stats-container">
+    {% for missingstat in missingstats %}
+    {{ missingstat|safe }}
+    {% endfor %}
   </div>
+
+
 
 </div>
 
@@ -47,51 +66,28 @@
     document.getElementById("datapreprocess").classList.remove("is-active");
     document.getElementById("dataprocess").classList.remove("is-active");
 
-    document.getElementById("choose-data").addEventListener('click', function () {
-      document.getElementById("modal-choose-data").classList.add("is-active");
-    })
-
-    var rootEl = document.documentElement;
-    var allModals = getAll('.modal');
-    var modalButtons = getAll('.modal-button');
-    var modalCloses = getAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button');
-
-    if (modalButtons.length > 0) {
-      modalButtons.forEach(function (el) {
-        el.addEventListener('click', function () {
-          var target = document.getElementById(el.dataset.target);
-          rootEl.classList.add('is-clipped');
-          target.classList.add('is-active');
-        });
-      });
-    }
-
-    if (modalCloses.length > 0) {
-      modalCloses.forEach(function (el) {
-        el.addEventListener('click', function () {
-          closeModals();
-        });
-      });
-    }
-
-    document.addEventListener('keydown', function (event) {
-      var e = event || window.event;
-      if (e.keyCode === 27) {
-        closeModals();
+    document.getElementById("preprocess-button").addEventListener('click', function() {
+      var chosenData = null;
+      var chooseData = document.getElementById("choose-data").getElementsByTagName("input");
+      for (var i = 0; i < chooseData.length; i++) {
+        if (chooseData[i].checked) {
+          chosenData = chooseData[i].value;
+        }
       }
-    });
 
-    function closeModals() {
-      rootEl.classList.remove('is-clipped');
-      allModals.forEach(function (el) {
-        el.classList.remove('is-active');
-      });
-    }
-
-    // Functions
-    function getAll(selector) {
-      return Array.prototype.slice.call(document.querySelectorAll(selector), 0);
-    }
+      var chosenImputation = null;
+      var chooseImputation = document.getElementById("choose-imputation").getElementsByTagName("input");
+      for (var i = 0; i < chooseImputation.length; i++) {
+        if (chooseImputation[i].checked) {
+          chosenImputation = chooseImputation[i].value;
+        }
+      }
+      setTimeout(function() {
+        var href = /* window.location.host + */ "/choosedata" + "/" + chosenData + "/" + chosenImputation;
+        window.location.href = href;
+      }, 500);
+      
+    })
   });
 </script>
 {% endblock %}

@@ -7,7 +7,7 @@
     <div class="box">
         <div class="tabs is-centered">
             <ul>
-              <li class="is-active" id="datainput">
+              <li id="datainput">
                 <a href="/datainput">
                   <span class="icon is-small"><i class="fas fa-database" aria-hidden="true"></i></span>
                   <span>Dữ liệu</span>
@@ -28,11 +28,24 @@
             </ul>
           </div>
         
+          <div class="title has-text-centered p-6 is-hidden" id="index-welcome">
+            Đây là trang web cho đồ án môn Data Warehouse
+            <div class="subtitle">
+              Chọn một trong những menu phía trên để bắt đầu  
+            </div>
+          </div>
 
         {% block pagecontent %}{% endblock %}
 
     </div>
 </div>
 <script>
+  var href = window.location.href;
+  href = href.split("/");
+  if (href[href.length - 1] == "") {
+    document.getElementById("index-welcome").classList.remove("is-hidden");
+  } else {
+    document.getElementById("index-welcome").classList.add("is-hidden");
+  }
 </script>
 {% endblock %}
