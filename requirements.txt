@@ -4,3 +4,4 @@ flask
 scipy
 missingno
 sklearn
+imblearn
