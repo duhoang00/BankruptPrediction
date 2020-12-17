@@ -19,8 +19,7 @@ def index():
 def datainput():
     arrfurl = "1year.arff"
     rawDfList = main.getRawDfList(arrfurl);
-    print(rawDfList[0])
-    return render_template("datainput.html", tables=[rawDfList[0].to_html(classes='data', header="true")])
+    return render_template("datainput.html", tables=[rawDfList[0].to_html(classes='table', header="true")])
 
 
 @app.route('/datapreprocess', methods=['GET', 'POST'])

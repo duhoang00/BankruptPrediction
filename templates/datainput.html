@@ -8,15 +8,16 @@
     <div class="column has-text-centered">
       <button class="button" id="choose-data">Chọn</button>
       <button class="button" id="show-data">Xem</button>
+      <button class="button" id="show-data-analyze">Phân tích</button>
     </div>
   </div>
 
-  <div class="table-container">
-    
+  <div class="table-container" style="max-height: 300px; overflow: auto;">
       {% for table in tables %}
-        {{ table|safe (class_='table') }}
+        {{ table|safe }}
       {% endfor %}
-    
+
+      
   </div>
 
   <div class="modal" id="modal-choose-data">
