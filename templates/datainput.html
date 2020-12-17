@@ -12,11 +12,11 @@
   </div>
 
   <div class="table-container">
-    <table class="table">
-      {% for item in data or [] %}
-      <p> {{ item }} </p>
+    
+      {% for table in tables %}
+        {{ table|safe (class_='table') }}
       {% endfor %}
-    </table>
+    
   </div>
 
   <div class="modal" id="modal-choose-data">

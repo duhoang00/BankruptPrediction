@@ -28,7 +28,6 @@ def convertListArff2Df(arrfurl):
     # paths.append("../data/1year.arff")
     paths.append(arrfurl)
     df_list = convertutils.arff2df(paths)
-    print(df_list)
     return df_list
 
 

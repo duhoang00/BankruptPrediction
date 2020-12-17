@@ -13,15 +13,11 @@ def arff2df(paths, include_path=False):
     """
     df_list = []
     for i in range(len(paths)):
-        print(include_path)
         if(include_path == True):
             df_list.append(
                 (paths[i], pd.DataFrame(arff.loadarff(paths[i])[0])))
         else:
-            print(pd.DataFrame(arff.loadarff(paths[i])[0]))
             df_list.append(pd.DataFrame(arff.loadarff(paths[i])[0]))
-            print('df_list at converutils')
-            print(df_list)
     return df_list
 
 
