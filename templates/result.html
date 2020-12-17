@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Trang chủ{% endblock %}
+
+{% block content %}
+<div class="container">
+    {{ form.non_field_errors }}
+    <div class="box title">
+        Result at {% now "jS F Y H:i" %}
+        <button class="button is-success">
+            <a href="/" class="has-text-white">Try again</a>
+        </button>
+    </div>
+    <div class="box">
+        {% for field in form %}
+        {{ field.label_tag }} {{ field }}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

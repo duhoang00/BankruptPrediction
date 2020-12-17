@@ -1,0 +1,96 @@
+{% extends "index.html" %}
+
+{% block title %}Trang chủ{% endblock %}
+
+{% block pagecontent %}
+<div>
+  <div class="columns">
+    <div class="column has-text-centered">
+      <button class="button" id="choose-data">Chọn</button>
+      <button class="button" id="show-data">Xem</button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="table">
+      {% for item in data or [] %}
+      <p> {{ item }} </p>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="modal" id="modal-choose-data">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Chọn dữ liệu</p>
+        <button class="delete" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        <div class="">
+          <button class="button">test</button>
+        </div>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button is-success">Lưu</button>
+        <button class="button">Thoát</button>
+      </footer>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById("datainput").classList.add("is-active");
+    document.getElementById("datapreprocess").classList.remove("is-active");
+    document.getElementById("dataprocess").classList.remove("is-active");
+
+    document.getElementById("choose-data").addEventListener('click', function () {
+      document.getElementById("modal-choose-data").classList.add("is-active");
+    })
+
+    var rootEl = document.documentElement;
+    var allModals = getAll('.modal');
+    var modalButtons = getAll('.modal-button');
+    var modalCloses = getAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button');
+
+    if (modalButtons.length > 0) {
+      modalButtons.forEach(function (el) {
+        el.addEventListener('click', function () {
+          var target = document.getElementById(el.dataset.target);
+          rootEl.classList.add('is-clipped');
+          target.classList.add('is-active');
+        });
+      });
+    }
+
+    if (modalCloses.length > 0) {
+      modalCloses.forEach(function (el) {
+        el.addEventListener('click', function () {
+          closeModals();
+        });
+      });
+    }
+
+    document.addEventListener('keydown', function (event) {
+      var e = event || window.event;
+      if (e.keyCode === 27) {
+        closeModals();
+      }
+    });
+
+    function closeModals() {
+      rootEl.classList.remove('is-clipped');
+      allModals.forEach(function (el) {
+        el.classList.remove('is-active');
+      });
+    }
+
+    // Functions
+    function getAll(selector) {
+      return Array.prototype.slice.call(document.querySelectorAll(selector), 0);
+    }
+  });
+</script>
+{% endblock %}

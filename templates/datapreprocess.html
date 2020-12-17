@@ -1,0 +1,13 @@
+{% extends "index.html" %}
+
+{% block title %}Trang chủ{% endblock %}
+
+{% block pagecontent %}
+    <div>Tut tut</div>
+
+    <script>
+        document.getElementById("datainput").classList.remove("is-active");
+        document.getElementById("datapreprocess").classList.add("is-active");
+        document.getElementById("dataprocess").classList.remove("is-active");
+    </script>
+{% endblock %}
