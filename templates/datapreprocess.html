@@ -4,7 +4,7 @@
 
 {% block pagecontent %}
 <div class="title">Chọn phương pháp</div>
-<div class="method-container mb-3">
+<div class="method-container mb-3" id="choose-method">
     <p>
         <label class="radio">
             <input type="radio" name="method" value="decisiontree" checked>
@@ -20,26 +20,107 @@
 </div>
 
 <div class="title">Phương pháp training và đánh giá</div>
-<div class="train-test-container mb-3">
+<div class="train-test-container mb-3" id="choose-traintest">
     <label class="radio">
         <input type="radio" name="traintest" value="split" checked>
         Train/Test Split
     </label>
     <span class="ml-5">Train:</span>
     <span>
-        <input id="splittrain" class="input is-small" style="width: 5%;" type="number" min="0" max="100" placeholder="Train">
+        <input id="splittrain" class="input is-small" style="width: 5%;" type="number" min="0" max="100"
+            placeholder="Train">
     </span>
     <span>Test:</span>
     <span id="splittest"></span>
 </div>
 
-<p>
-    <button class="button is-dark" id=process-button">Xử lí</button>
+<p class="mb-3">
+    <button class="button is-dark" id="process-button">Xử lí</button>
+    <button class="button" id="classification-button">Phân lớp</button>
 </p>
+
+<div class="title">Confusion Matrix</div>
+<div>{{confusion_matrix}}</div>
+
+<div class="title">Accuracy Score</div>
+<div>{{accuracy_score}}</div>
+
+<div class="title">Classification Report</div>
+<div class="table-container" style="max-height: 300px; overflow: auto;">
+  <table class="table">
+    <tr>
+      <td></td>
+      <td>precision</td>
+      <td>recall</td>
+      <td>f1 score</td>
+      <td>support</td>
+    </tr>
+    {% for key, values in classification_report.items() %}
+    <tr>
+      <td>{{ key }}</td>
+      <td>{{ values.precision }}</td>
+      <td>{{ values.recall }}</td>
+      <td>{{ values.f1score }}</td>
+      <td>{{ values.support }}</td>
+   </tr>
+    {% endfor%}
+  </table>
+</div>
+<!-- <div>{{classification_report}}</div> -->
 
 <script>
     document.getElementById("datainput").classList.remove("is-active");
     document.getElementById("datapreprocess").classList.add("is-active");
     document.getElementById("dataprocess").classList.remove("is-active");
+
+    currentSelection();
+
+    function currentSelection() {
+        console.log('check current selection');
+        var href = window.location.href;
+        var href = href.split("/");
+
+        for (var i = 0; i < href.length; i++) {
+            if (href[i] == "choosedatapreprocess") {
+                hadSelected(href, i);
+                break;
+            }
+        }
+    }
+
+    function hadSelected(href, hrefindex) {
+        chosenData = href[hrefindex + 1];
+        chosenImputation = href[hrefindex + 2];
+        trainEvent(chosenData, chosenImputation);
+    }
+
+    function trainEvent(chosenData, chosenImputation) {
+      document.getElementById("process-button").addEventListener('click', function () {
+        var chosenMethod = null;
+        var chooseMethod = document.getElementById("choose-method").getElementsByTagName("input");
+        for (var i = 0; i < chooseMethod.length; i++) {
+          if (chooseMethod[i].checked) {
+            chosenMethod = chooseMethod[i].value;
+          }
+        }
+
+        var chosenTraintest = null;
+        var chooseTraintest = document.getElementById("choose-traintest").getElementsByTagName("input");
+        for (var i = 0; i < chooseTraintest.length; i++) {
+          if (chooseTraintest[i].checked) {
+            chosenTraintest = chooseTraintest[i].value;
+          }
+        }
+        var value = null;
+        if (chosenTraintest == "split") {
+            value = document.getElementById("splittrain").value;
+        }
+        setTimeout(function () {
+          var href = "/choosedatatrain" + "/" + chosenData + "/" + chosenImputation + "/" + chosenMethod + "/" + chosenTraintest + "/" + value;
+          window.location.href = href;
+        }, 500);
+
+      })
+    }
 </script>
 {% endblock %}

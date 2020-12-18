@@ -1,6 +1,6 @@
 {% extends "index.html" %}
 
-{% block title %}Trang chủ{% endblock %}
+{% block title %}Dữ liệu{% endblock %}
 
 {% block pagecontent %}
 <div>
@@ -28,17 +28,17 @@
         Mean imputation
       </label>
     </p>
-    <p>
+    <!-- <p>
       <label class="radio">
         <input type="radio" name="imputation" value="other">
         Other imputation
       </label>
-    </p>
-    
+    </p> -->
+
   </div>
 
   <p class="mb-3">
-    <button class="button is-dark" id="preprocess-button">Xử lí</button>  
+    <button class="button is-dark" id="preprocess-button">Tiền xử lí</button>
   </p>
 
   <div class="title">Dữ liệu</div>
@@ -46,8 +46,10 @@
     {% for table in tables %}
     {{ table|safe }}
     {% endfor %}
-
   </div>
+
+  <div class="title">Xử lí dữ liệu</div>
+  <button class="button is-dark mb-3" id="process-button">Sử dụng dữ liệu này</button>
 
   <div class="title">Phân tích dữ liệu</div>
   <div class="missing-stats-container">
@@ -66,28 +68,81 @@
     document.getElementById("datapreprocess").classList.remove("is-active");
     document.getElementById("dataprocess").classList.remove("is-active");
 
-    document.getElementById("preprocess-button").addEventListener('click', function() {
-      var chosenData = null;
+    currentSelection();
+    preprocessEvent();
+    processEvent();
+
+    function processEvent() {
+      document.getElementById("process-button").addEventListener('click', function() {
+        setTimeout(function () {
+          var href = /* window.location.host + */ "/choosedatapreprocess" + "/" + chosenData + "/" + chosenImputation;
+          window.location.href = href;
+        }, 500);
+      })
+    }
+
+    function currentSelection() {
+      console.log('check current selection');
+      var href = window.location.href;
+      var href = href.split("/");
+
+      for (var i = 0; i < href.length; i++) {
+        if (href[i] == "choosedata") {
+          hadSelected(href, i);
+          break;
+        }
+      }
+    }
+
+    function hadSelected(href, hrefindex) {
+      console.log('had selected');
+      chosenData = href[hrefindex + 1];
+      console.log(chosenData)
       var chooseData = document.getElementById("choose-data").getElementsByTagName("input");
       for (var i = 0; i < chooseData.length; i++) {
-        if (chooseData[i].checked) {
-          chosenData = chooseData[i].value;
+        console.log(chooseData[i].value)
+        if (chooseData[i].value == chosenData && chooseData != "null") {
+          console.log('1')
+          chooseData[i].checked = true;
         }
       }
 
-      var chosenImputation = null;
+      chosenImputation = href[hrefindex + 2];
+      console.log(chosenImputation);
       var chooseImputation = document.getElementById("choose-imputation").getElementsByTagName("input");
       for (var i = 0; i < chooseImputation.length; i++) {
-        if (chooseImputation[i].checked) {
-          chosenImputation = chooseImputation[i].value;
+        console.log(chooseImputation[i].value)
+        if (chooseImputation[i].value = chosenImputation && chosenImputation != "null") {
+          console.log('2')
+          chooseImputation[i].checked = true;
         }
       }
-      setTimeout(function() {
-        var href = /* window.location.host + */ "/choosedata" + "/" + chosenData + "/" + chosenImputation;
-        window.location.href = href;
-      }, 500);
-      
-    })
+    }
+
+    function preprocessEvent() {
+      document.getElementById("preprocess-button").addEventListener('click', function () {
+        var chosenData = null;
+        var chooseData = document.getElementById("choose-data").getElementsByTagName("input");
+        for (var i = 0; i < chooseData.length; i++) {
+          if (chooseData[i].checked) {
+            chosenData = chooseData[i].value;
+          }
+        }
+
+        var chosenImputation = null;
+        var chooseImputation = document.getElementById("choose-imputation").getElementsByTagName("input");
+        for (var i = 0; i < chooseImputation.length; i++) {
+          if (chooseImputation[i].checked) {
+            chosenImputation = chooseImputation[i].value;
+          }
+        }
+        setTimeout(function () {
+          var href = /* window.location.host + */ "/choosedata" + "/" + chosenData + "/" + chosenImputation;
+          window.location.href = href;
+        }, 500);
+
+      })
+    }
   });
 </script>
 {% endblock %}
