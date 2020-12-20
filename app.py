@@ -51,10 +51,7 @@ def datapreprocess(chosendata, chosenimputation):
 def choosedatatrain(chosendata, chosenimputation, chosenmethod, chosentraintest, value):
     df, Df_missing_stats = preProcessData(chosendata, chosenimputation, True)
     if (chosentraintest == "split"):
-        if (value != "null"):
-            X_train, X_test, y_train, y_test = process.traintestsplit(df, value)
-        else:
-            X_train, X_test, y_train, y_test = process.traintestsplit(df)
+        X_train, X_test, y_train, y_test = process.traintestsplit(df, value)
 
     if (chosenmethod == "decisiontree"):
         confusion_matrix, accuracy_score, classification_report = process.decisionTree(X_train, X_test, y_train, y_test)
@@ -74,7 +71,14 @@ def choosedatapredict(chosendata, chosenimputation, chosenmethod, chosentraintes
 
 @app.route('/predict/<string:chosendata>/<string:chosenimputation>/<string:chosenmethod>/<string:chosentraintest>/<int:value>/<string:userinput>', methods=['GET', 'POST'])
 def predict(chosendata, chosenimputation, chosenmethod, chosentraintest, value, userinput):
-    return render_template("dataprocess.html")
+    df, Df_missing_stats = preProcessData(chosendata, chosenimputation, True)
+    if (chosentraintest == "split"):
+        X_train, X_test, y_train, y_test = process.traintestsplit(df, value)
+
+    if (chosenmethod == "decisiontree"):
+        result = process.decisionTreePredict(X_train, X_test, y_train, y_test, userinput)
+    
+    return render_template("dataprocess.html", result = result)
 
 
 def preProcessData(chosendata, chosenimputation, smote):
