@@ -36,7 +36,6 @@ def traintestsplit(df, test_size):
     X = df[features]
     y = df[64]
     
-    print(y)
     if (test_size == "null"):
         test_size = 0.2
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size)
@@ -70,12 +69,13 @@ def decisionTree(X_train, X_test, y_train, y_test):
     
 
 def cal_accuracy(y_test, y_pred):
-    # print("Confusion Matrix: ", confusion_matrix(y_test, y_pred))
     confusion_matrix_result = confusion_matrix(y_test, y_pred)
-    # print ("Accuracy : ", accuracy_score(y_test,y_pred)*100) 
+    print("Confusion Matrix: ", confusion_matrix_result)
     accuracy_score_result = accuracy_score(y_test,y_pred)*100
-    print("Report : ", classification_report(y_test, y_pred))
+    # print ("Accuracy : ", accuracy_score_result) 
     classification_report_result = classification_report(y_test, y_pred, output_dict=True)
+    # print("Report : ", classification_report_result)
+    
     return confusion_matrix_result, accuracy_score_result, classification_report_result
 
 def createDecisionTreeGraph(dt, labels):
