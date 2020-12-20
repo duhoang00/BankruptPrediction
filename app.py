@@ -72,6 +72,11 @@ def dataprocess():
     return render_template("dataprocess.html")
 
 
+@app.route('/predict/', methods=['GET', 'POST'])
+def predict():
+    return render_template("dataprocess.html")
+
+
 def preProcessData(chosendata, chosenimputation, smote):
     arrfurl = chosendata + ".arff"
     rawDfList = main.getRawDfList(arrfurl);

@@ -36,12 +36,21 @@
 
 <p class="mb-3">
   <button class="button is-dark" id="process-button">Xử lí</button>
-  <button class="button" id="classification-button">Phân lớp</button>
 </p>
 
-<div class="accuracy is-hidden" id="accuracy-report">
+<div class="accuracy is-hidden mb-3" id="accuracy-report">
   <div class="title">Confusion Matrix</div>
-  <div>{{confusion_matrix}}</div>
+  <div>
+    <table class="table">
+      {%for row in confusion_matrix%}
+         <tr>
+            {%for col in row%}
+              <td>{{ col }}</td>
+            {%endfor%}
+         </tr>
+      {%endfor%}
+    </table>
+  </div>
 
   <div class="title">Accuracy Score</div>
   <div>{{accuracy_score}}</div>
@@ -69,12 +78,23 @@
   </div>
 </div>
 
+<p class="mb-3">
+  <button class="button is-dark" id="classification-button">Phân lớp</button>
+</p>
+
 <script>
   document.getElementById("datainput").classList.remove("is-active");
   document.getElementById("datapreprocess").classList.add("is-active");
   document.getElementById("dataprocess").classList.remove("is-active");
 
   currentSelection();
+  classificationEvent();
+
+  function classificationEvent() {
+    document.getElementById("classification-button").addEventListener("click", function() {
+      console.log('go predict!');
+    })
+  }
 
   function currentSelection() {
     console.log('check current selection');
