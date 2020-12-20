@@ -67,13 +67,13 @@ def choosedatatrain(chosendata, chosenimputation, chosenmethod, chosentraintest,
         classification_report = classification_report)
 
 
-@app.route('/dataprocess', methods=['GET', 'POST'])
-def dataprocess():
+@app.route('/choosedatapredict/<string:chosendata>/<string:chosenimputation>/<string:chosenmethod>/<string:chosentraintest>/<int:value>', methods=['GET', 'POST'])
+def choosedatapredict(chosendata, chosenimputation, chosenmethod, chosentraintest, value):
     return render_template("dataprocess.html")
 
 
-@app.route('/predict/', methods=['GET', 'POST'])
-def predict():
+@app.route('/predict/<string:chosendata>/<string:chosenimputation>/<string:chosenmethod>/<string:chosentraintest>/<int:value>/<string:userinput>', methods=['GET', 'POST'])
+def predict(chosendata, chosenimputation, chosenmethod, chosentraintest, value, userinput):
     return render_template("dataprocess.html")
 
 
@@ -87,7 +87,6 @@ def preProcessData(chosendata, chosenimputation, smote):
     # rawDfList[0] = rawDfList[0][rawDfList[0]['Attr1'] > 0.3]  # less value for dataframe
     Df_missing_stats = main.getMissingStats(rawDfList)
     return  rawDfList[0], Df_missing_stats
-
 
 
 @app.errorhandler(404)

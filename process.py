@@ -70,7 +70,7 @@ def decisionTree(X_train, X_test, y_train, y_test):
 
 def cal_accuracy(y_test, y_pred):
     confusion_matrix_result = confusion_matrix(y_test, y_pred)
-    print("Confusion Matrix: ", confusion_matrix_result)
+    # print("Confusion Matrix: ", confusion_matrix_result)
     accuracy_score_result = accuracy_score(y_test,y_pred)*100
     # print ("Accuracy : ", accuracy_score_result) 
     classification_report_result = classification_report(y_test, y_pred, output_dict=True)

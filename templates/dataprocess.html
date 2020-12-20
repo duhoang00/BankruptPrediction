@@ -3,15 +3,127 @@
 {% block title %}Trang chủ{% endblock %}
 
 {% block pagecontent %}
-<form action="/predict/" method="post">
-    <label for="workingcapital">Working Capital 1: </label>
-    <input id="workingcapital" type="text" name="workingcapital" value="{{ workingcapital }}">
-    <input type="submit" value="Submit">
-</form>
+
+<div class="columns">
+    <div class="column is-three-fifth">
+        X1 net profit / total assets <br>
+        X2 total liabilities / total assets <br>
+        X3 working capital / total assets <br>
+        X4 current assets / short-term liabilities <br>
+        X5 [(cash + short-term securities + receivables - short-term liabilities) / (operating expenses - depreciation)]
+        * 365 <br>
+        X6 retained earnings / total assets <br>
+        X7 EBIT / total assets <br>
+        X8 book value of equity / total liabilities <br>
+        X9 sales / total assets <br>
+        X10 equity / total assets <br>
+        X11 (gross profit + extraordinary items + financial expenses) / total assets <br>
+        X12 gross profit / short-term liabilities <br>
+        X13 (gross profit + depreciation) / sales <br>
+        X14 (gross profit + interest) / total assets <br>
+        X15 (total liabilities * 365) / (gross profit + depreciation) <br>
+        X16 (gross profit + depreciation) / total liabilities <br>
+        X17 total assets / total liabilities <br>
+        X18 gross profit / total <br>
+        X19 gross profit / sales <br>
+        X20 (inventory * 365) / sales <br>
+        X21 sales (n) / sales (n-1) <br>
+        X22 profit on operating activities / total assets <br>
+        X23 net profit / sales <br>
+        X24 gross profit (in 3 years) / total assets <br>
+        X25 (equity - share capital) / total assets <br>
+        X26 (net profit + depreciation) / total liabilities <br>
+        X27 profit on operating activities / financial expenses <br>
+        X28 working capital / fixed assets <br>
+        X29 logarithm of total assets <br>
+        X30 (total liabilities - cash) / sales <br>
+        X31 (gross profit + interest) / sales <br>
+        X32 (current liabilities * 365) / cost of products sold <br>
+        X33 operating expenses / short-term liabilities <br>
+        X34 operating expenses / total liabilities <br>
+        X35 profit on sales / total assets <br>
+        X36 total sales / total assets <br>
+        X37 (current assets - inventories) / long-term liabilities <br>
+        X38 constant capital / total assets <br>
+        X39 profit on sales / sales <br>
+        X40 (current assets - inventory - receivables) / short-term liabilities <br>
+        X41 total liabilities / ((profit on operating activities + depreciation) * (12/365)) <br>
+        X42 profit on operating activities / sales <br>
+        X43 rotation receivables + inventory turnover in days <br>
+        X44 (receivables * 365) / sales <br>
+        X45 net profit / inventory <br>
+        X46 (current assets - inventory) / short-term liabilities <br>
+        X47 (inventory * 365) / cost of products sold <br>
+        X48 EBITDA (profit on operating activities - depreciation) / total assets <br>
+        X49 EBITDA (profit on operating activities - depreciation) / sales <br>
+        X50 current assets / total liabilities <br>
+        X51 short-term liabilities / total assets <br>
+        X52 (short-term liabilities * 365) / cost of products sold) <br>
+        X53 equity / fixed assets <br>
+        X54 constant capital / fixed assets <br>
+        X55 working capital <br>
+        X56 (sales - cost of products sold) / sales <br>
+        X57 (current assets - inventory - short-term liabilities) / (sales - gross profit - depreciation) <br>
+        X58 total costs /total sales <br>
+        X59 long-term liabilities / equity <br>
+        X60 sales / inventory <br>
+        X61 sales / receivables <br>
+        X62 (short-term liabilities *365) / sales <br>
+        X63 sales / short-term liabilities <br>
+        X64 sales / fixed assets
+    </div>
+    <div class="column is-two-fifth" style="position: sticky;">
+        <div class="mb-3">
+            <div class="file mb-3 is-hidden">
+                <label class="file-label">
+                    <input class="file-input" type="file" name="userfile">
+                    <span class="file-cta">
+                        <span class="file-icon">
+                            <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                            Chọn 1 file...
+                        </span>
+                    </span>
+                </label>
+                <div class="mb-3">hoặc</div>
+            </div>
+            <textarea id="userinput" class="textarea" style="min-height: 10em;" type="text"
+                placeholder="Nhập 64 chỉ số theo thứ tự bên trái liền nhau và cách nhau bởi dấu ,"></textarea>
+        </div>
+        <p>
+        <div class="title">Phân lớp</div>
+        <button class="button" id="classification-button">Phân lớp</button>
+        </p>
+    </div>
+</div>
 
 <script>
     document.getElementById("datainput").classList.remove("is-active");
     document.getElementById("datapreprocess").classList.remove("is-active");
     document.getElementById("dataprocess").classList.add("is-active");
+
+    classificationEvent();
+
+    function classificationEvent() {
+        document.getElementById("classification-button").addEventListener("click", function () {
+            var userinput = document.getElementById("userinput").value;
+            var href = window.location.href;
+            var href = href.split("/");
+
+            chosenData = href[4];
+            chosenImputation = href[5];
+            chosenMethod = href[6];
+            chosenTraintest = href[7];
+            value = href[8];
+
+            setTimeout(function () {
+                var href = "/predict" + "/" + chosenData + "/" + chosenImputation + "/" + chosenMethod + "/" + chosenTraintest + "/" + value + "/" + userinput;
+                window.location.href = href;
+            }, 500);
+        })
+    }
+
+
 </script>
 {% endblock %}

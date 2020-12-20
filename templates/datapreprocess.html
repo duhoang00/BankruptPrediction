@@ -43,11 +43,11 @@
   <div>
     <table class="table">
       {%for row in confusion_matrix%}
-         <tr>
-            {%for col in row%}
-              <td>{{ col }}</td>
-            {%endfor%}
-         </tr>
+      <tr>
+        {%for col in row%}
+        <td>{{ col }}</td>
+        {%endfor%}
+      </tr>
       {%endfor%}
     </table>
   </div>
@@ -91,8 +91,20 @@
   classificationEvent();
 
   function classificationEvent() {
-    document.getElementById("classification-button").addEventListener("click", function() {
-      console.log('go predict!');
+    document.getElementById("classification-button").addEventListener("click", function () {
+      var href = window.location.href;
+      var href = href.split("/");
+
+      chosenData = href[4];
+      chosenImputation = href[5];
+      chosenMethod = href[6];
+      chosenTraintest = href[7];
+      value = href[8];
+
+      setTimeout(function () {
+        var href = "/choosedatapredict" + "/" + chosenData + "/" + chosenImputation + "/" + chosenMethod + "/" + chosenTraintest + "/" + value;
+        window.location.href = href;
+      }, 500);
     })
   }
 
@@ -147,7 +159,6 @@
         var href = "/choosedatatrain" + "/" + chosenData + "/" + chosenImputation + "/" + chosenMethod + "/" + chosenTraintest + "/" + value;
         window.location.href = href;
       }, 500);
-
     })
   }
 </script>
