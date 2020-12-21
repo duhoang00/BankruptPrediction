@@ -14,6 +14,11 @@ app=Flask(__name__)
 def index():
     return render_template("index.html")
         
+
+@app.route('/about', methods=['GET', 'POST'])
+def about():
+    return render_template("about.html")
+
 @app.route('/datainput', methods=['GET', 'POST'])
 def datainput():
     df, Df_missing_stats = preProcessData("1year", "null", False)
@@ -28,15 +33,6 @@ def chooseData(chosendata, chosenimputation):
     return render_template("datainput.html", 
         tables=[df.to_html(classes='table', header="true")], 
         missingstats = [Df_missing_stats.to_html(classes="table missing-stats", header="true")])
-
-
-#test
-@app.route('/datapreprocess', methods=['GET', 'POST'])
-def datapreprocesstest():
-    return render_template("datapreprocess.html",
-        confusion_matrix = [], 
-        accuracy_score = [], 
-        classification_report = {})
 
 
 @app.route('/choosedatapreprocess/<string:chosendata>/<string:chosenimputation>', methods=['GET', 'POST'])
