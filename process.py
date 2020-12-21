@@ -19,15 +19,19 @@ def processData(df_list):
 
 
 def kfold(df, k):
-    kf = KFold(n_splits=2)
-    kf.get_n_splits(X)
-    print(kf) 
+    print('using k fold...')
+    features = list(df.columns[:64])
+    X = np.array(df[features])
+    y = np.array(df[64])
+    kf = KFold(n_splits=k)
 
-    KFold(n_splits=2, random_state=None, shuffle=False)
+    KFold(n_splits=k, random_state=None, shuffle=False)
     for train_index, test_index in kf.split(X):
         print("TRAIN:", train_index, "TEST:", test_index)
         X_train, X_test = X[train_index], X[test_index]
         y_train, y_test = y[train_index], y[test_index]
+
+    return X_train, X_test, y_train, y_test
 
 
 def traintestsplit(df, test_size):

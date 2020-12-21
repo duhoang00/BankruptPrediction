@@ -39,17 +39,30 @@
 
 <div class="title">Phương pháp training và đánh giá</div>
 <div class="train-test-container mb-3" id="choose-traintest">
-  <label class="radio">
-    <input type="radio" name="traintest" value="split" checked>
-    Train/Test Split
-  </label>
-  <span class="ml-5">Test:</span>
-  <span>
-    <input id="splittest" class="input is-small" style="width: 5%;" type="number" min="0" max="100"
-      placeholder="Test">%
-  </span>
-  <span>, Train:</span>
-  <span id="splittrain"></span>%
+  <div>
+    <label class="radio">
+      <input type="radio" name="traintest" value="split" checked>
+      Train/Test Split
+    </label>
+    <span class="ml-5">Test:</span>
+    <span>
+      <input id="splittest" class="input is-small" style="width: 5%;" type="number" min="0" max="100"
+        placeholder="Test">%
+    </span>
+    <span>, Train:</span>
+    <span id="splittrain"></span>%
+  </div>
+  <div>
+    <label class="radio">
+      <input type="radio" name="traintest" value="kfold" checked>
+      KFold
+    </label>
+    <span class="ml-5">Folds:</span>
+    <span>
+      <input id="folds" class="input is-small" style="width: 5%;" type="number" min="0" max="100"
+        placeholder="Folds">
+    </span>
+  </div>
 </div>
 
 <p class="mb-3">
@@ -154,11 +167,27 @@
       callback(result);
     }
 
+    function getMethodValue(chosenTraintest) {
+      if (chosenTraintest == "split") {
+        return document.getElementById("splittest").value;
+      } else if (chosenTraintest == "kfold") {
+        return document.getElementById("folds").value;
+      }
+    }
+
+    function setMethodValue(chosenTraintest, value) {
+      if (chosenTraintest == "split") {
+        document.getElementById("splittest").value = value;
+      } else if (chosenTraintest == "kfold") {
+        document.getElementById("folds").value = value;
+      }
+    }
+
     document.getElementById("process-button").addEventListener("click", function () {
       getInfoFromUrl(function (obj) {
         obj.chosenMethod = getSelectedValue("choose-method");
         obj.chosenTraintest = getSelectedValue("choose-traintest");
-        value = document.getElementById("splittest").value;
+        value = getMethodValue(obj.chosenTraintest);
         if (value == "") {
           value = "20";
         }
@@ -176,7 +205,7 @@
         if (obj.chosenMethod != "") {
           setSeletedValue("choose-method", obj.chosenMethod);
           setSeletedValue("choose-traintest", obj.chosenTraintest);
-          document.getElementById("splittest").value = obj.value;
+          setMethodValue(obj.chosenTraintest, obj.value);
         }
       })
     }
@@ -185,7 +214,7 @@
       getInfoFromUrl(function (obj) {
         obj.chosenMethod = getSelectedValue("choose-method");
         obj.chosenTraintest = getSelectedValue("choose-traintest");
-        value = document.getElementById("splittest").value;
+        value = getMethodValue(obj.chosenTraintest);
         if (value == "") {
           value = "20";
         }

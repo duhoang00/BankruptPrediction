@@ -48,6 +48,8 @@ def choosedatatrain(chosendata, chosenimputation, chosenmethod, chosentraintest,
     df, Df_missing_stats = preProcessData(chosendata, chosenimputation, True)
     if (chosentraintest == "split"):
         X_train, X_test, y_train, y_test = process.traintestsplit(df, value)
+    if (chosentraintest == "kfold"):
+        X_train, X_test, y_train, y_test = process.kfold(df, value)
 
     if (chosenmethod == "decisiontree"):
         confusion_matrix, accuracy_score, classification_report = process.decisionTree(X_train, X_test, y_train, y_test)
@@ -78,6 +80,8 @@ def predict(chosendata, chosenimputation, chosenmethod, chosentraintest, value, 
     df, Df_missing_stats = preProcessData(chosendata, chosenimputation, True)
     if (chosentraintest == "split"):
         X_train, X_test, y_train, y_test = process.traintestsplit(df, value)
+    if (chosentraintest == "kfold"):
+        X_train, X_test, y_train, y_test = process.kfold(df, value)
 
     if (chosenmethod == "decisiontree"):
         result = process.decisionTreePredict(X_train, X_test, y_train, y_test, userinput)
