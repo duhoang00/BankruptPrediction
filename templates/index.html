@@ -4,60 +4,71 @@
 
 {% block content %}
 <div class="container">
-    <div class="box">
-        <div class="tabs is-centered">
-            <ul>
-              <li id="home">
-                <a href="/">
-                  <span class="icon is-small"><i class="fas fa-home" aria-hidden="true"></i></span>
-                  <span>Trang chủ</span>
-                </a>
-              </li>
-              <li id="datainput">
-                <a href="/datainput">
-                  <span class="icon is-small"><i class="fas fa-database" aria-hidden="true"></i></span>
-                  <span>Dữ liệu</span>
-                </a>
-              </li>
-              <li id="datapreprocess">
-                <a href="/datapreprocess">
-                  <span class="icon is-small"><i class="fas fa-train" aria-hidden="true"></i></span>
-                  <span>Train</span>
-                </a>
-              </li>
-              <li id="dataprocess">
-                <a href="/dataprocess">
-                  <span class="icon is-small"><i class="fas fa-file-code" aria-hidden="true"></i></span>
-                  <span>Phân lớp</span>
-                </a>
-              </li>
-              <li id="about">
-                <a href="/about">
-                  <span class="icon is-small"><i class="fas fa-question-circle" aria-hidden="true"></i></span>
-                  <span>Thông tin</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        
-          <div class="title has-text-centered p-6 is-hidden" id="index-welcome">
-            Đây là trang web cho đồ án môn Data Warehouse
-            <div class="subtitle">
-              Chọn menu dữ liệu phía trên để bắt đầu  
-            </div>
-          </div>
-
-        {% block pagecontent %}{% endblock %}
-
+  <div class="box">
+    <div class="tabs is-centered">
+      <ul>
+        <li id="home">
+          <a href="/">
+            <span class="icon is-small"><i class="fas fa-home" aria-hidden="true"></i></span>
+            <span>Trang chủ</span>
+          </a>
+        </li>
+        <li id="datainput">
+          <a href="/datainput">
+            <span class="icon is-small"><i class="fas fa-database" aria-hidden="true"></i></span>
+            <span>Dữ liệu</span>
+          </a>
+        </li>
+        <li id="datapreprocess">
+          <a href="/datapreprocess">
+            <span class="icon is-small"><i class="fas fa-train" aria-hidden="true"></i></span>
+            <span>Train</span>
+          </a>
+        </li>
+        <li id="dataprocess">
+          <a href="/dataprocess">
+            <span class="icon is-small"><i class="fas fa-file-code" aria-hidden="true"></i></span>
+            <span>Phân lớp</span>
+          </a>
+        </li>
+        <li id="about">
+          <a href="/about">
+            <span class="icon is-small"><i class="fas fa-question-circle" aria-hidden="true"></i></span>
+            <span>Thông tin</span>
+          </a>
+        </li>
+      </ul>
     </div>
+
+    <div class="title has-text-centered p-6 is-hidden" id="index-welcome">
+      Đây là trang web cho đồ án môn Data Warehouse
+      <div class="subtitle">
+        Chọn menu dữ liệu phía trên để bắt đầu
+      </div>
+    </div>
+
+    {% block pagecontent %}{% endblock %}
+
+  </div>
 </div>
 <script>
-  var href = window.location.href;
-  href = href.split("/");
-  if (href[href.length - 1] == "") {
-    document.getElementById("index-welcome").classList.remove("is-hidden");
-  } else {
-    document.getElementById("index-welcome").classList.add("is-hidden");
-  }
+  document.addEventListener('DOMContentLoaded', function () {
+    var href = window.location.href;
+    href = href.split("/");
+    if (href[href.length - 1] == "") {
+      console.log('index page')
+      document.getElementById("index-welcome").classList.remove("is-hidden");
+
+      document.getElementById("home").classList.add("is-active");
+      document.getElementById("datainput").classList.remove("is-active");
+      document.getElementById("datapreprocess").classList.remove("is-active");
+      document.getElementById("dataprocess").classList.remove("is-active");
+      document.getElementById("about").classList.remove("is-active");
+
+    } else {
+      document.getElementById("index-welcome").classList.add("is-hidden");
+      document.getElementById("home").classList.remove("is-active");
+    }
+  })
 </script>
 {% endblock %}

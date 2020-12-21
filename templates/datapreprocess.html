@@ -17,6 +17,24 @@
       Random forest
     </label>
   </p>
+  <p>
+    <label class="radio">
+      <input type="radio" name="method" value="gaussiannb">
+      Naive Bayes GaussianNB
+    </label>
+  </p>
+  <!-- <p>
+    <label class="radio">
+      <input type="radio" name="method" value="multinomialnb">
+      Naive Bayes MultinomialNB
+    </label>
+  </p> -->
+  <p>
+    <label class="radio">
+      <input type="radio" name="method" value="bernoullinb">
+      Naive Bayes BernoulliNB
+    </label>
+  </p>
 </div>
 
 <div class="title">Phương pháp training và đánh giá</div>
@@ -25,13 +43,13 @@
     <input type="radio" name="traintest" value="split" checked>
     Train/Test Split
   </label>
-  <span class="ml-5">Train:</span>
+  <span class="ml-5">Test:</span>
   <span>
-    <input id="splittrain" class="input is-small" style="width: 5%;" type="number" min="0" max="100"
-      placeholder="Train">
+    <input id="splittest" class="input is-small" style="width: 5%;" type="number" min="0" max="100"
+      placeholder="Test">%
   </span>
-  <span>Test:</span>
-  <span id="splittest"></span>
+  <span>, Train:</span>
+  <span id="splittrain"></span>%
 </div>
 
 <p class="mb-3">
@@ -62,7 +80,7 @@
         <td></td>
         <td>Precision</td>
         <td>Recall</td>
-        <td>F1 Ccore</td>
+        <td>F1 Score (F-Measure)</td>
         <td>Support</td>
       </tr>
       {% for key, values in classification_report.items() %}
@@ -83,103 +101,102 @@
 </p>
 
 <script>
-  document.getElementById("datainput").classList.remove("is-active");
-  document.getElementById("datapreprocess").classList.add("is-active");
-  document.getElementById("dataprocess").classList.remove("is-active");
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById("datapreprocess").classList.add("is-active");
 
-  currentSelection();
-  classificationEvent();
+    afterPageLoad();
 
-  function classificationEvent() {
-    document.getElementById("classification-button").addEventListener("click", function () {
+    function getSelectedValue(id) {
+      var list = document.getElementById(id).getElementsByTagName("input");
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].checked) {
+          return list[i].value;
+        }
+      }
+    }
+
+    function setSeletedValue(id, value) {
+      var list = document.getElementById(id).getElementsByTagName("input");
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].value == value) {
+          list[i].checked = true;
+        }
+      }
+    }
+
+    function getInfoFromUrl(callback) {
       var href = window.location.href;
       var href = href.split("/");
+      var result = {
+        'step':'',
+        'chosenData': '',
+        'chosenImputation': '',
+        'chosenMethod': '',
+        'chosenTraintest': '',
+        'value': ''
+      };
 
-      chosenData = href[4];
-      chosenImputation = href[5];
-      chosenMethod = href[6];
-      chosenTraintest = href[7];
-      value = href[8];
-
-      setTimeout(function () {
-        var href = "/choosedatapredict" + "/" + chosenData + "/" + chosenImputation + "/" + chosenMethod + "/" + chosenTraintest + "/" + value;
-        window.location.href = href;
-      }, 500);
-    })
-  }
-
-  function currentSelection() {
-    console.log('check current selection');
-    var href = window.location.href;
-    var href = href.split("/");
-
-    for (var i = 0; i < href.length; i++) {
-      if (href[i] == "choosedatapreprocess") {
-        hadSelected(href, i);
-        break;
+      for (var i = 0; i < href.length; i++) {
+        result.step = href[3];
+        if (i == 4) {
+          result.chosenData = href[4];
+        } else if (i == 5) {
+          result.chosenImputation = href[5];
+        } else if (i == 6) {
+          result.chosenMethod = href[6];
+        } else if (i == 7) {
+          result.chosenTraintest = href[7];
+        } else if (i == 8) {
+          result.value = href[8];
+        }
       }
-      if (href[i] == "choosedatatrain") {
-        document.getElementById("accuracy-report").classList.remove("is-hidden");
-        chosenMethod = href[i+3];
-        chosenTraintest = href[i+4];
-        value = href[i+5];
-        selectOldOptions(chosenMethod, chosenTraintest, value);
-      }
-
+      console.log(result);
+      callback(result);
     }
-  }
 
-  function selectOldOptions(chosenMethod, chosenTraintest, value) {
-    var chooseMethod = document.getElementById("choose-method").getElementsByTagName("input");
-      for (var i = 0; i < chooseMethod.length; i++) {
-        if (chooseMethod[i].value == chosenMethod) {
-          chooseMethod[i].checked = true;
-        }
-      }
-      var chooseTraintest = document.getElementById("choose-traintest").getElementsByTagName("input");
-      for (var i = 0; i < chooseTraintest.length; i++) {
-        if (chooseTraintest[i].value == chosenTraintest) {
-          chooseTraintest[i].checked = true;
-        }
-      }
-      document.getElementById("splittrain").value = value;
-  }
-
-  function hadSelected(href, hrefindex) {
-    chosenData = href[hrefindex + 1];
-    chosenImputation = href[hrefindex + 2];
-    trainEvent(chosenData, chosenImputation);
-  }
-
-  function trainEvent(chosenData, chosenImputation) {
-    document.getElementById("process-button").addEventListener('click', function () {
-      var chosenMethod = null;
-      var chooseMethod = document.getElementById("choose-method").getElementsByTagName("input");
-      for (var i = 0; i < chooseMethod.length; i++) {
-        if (chooseMethod[i].checked) {
-          chosenMethod = chooseMethod[i].value;
-        }
-      }
-
-      var chosenTraintest = null;
-      var chooseTraintest = document.getElementById("choose-traintest").getElementsByTagName("input");
-      for (var i = 0; i < chooseTraintest.length; i++) {
-        if (chooseTraintest[i].checked) {
-          chosenTraintest = chooseTraintest[i].value;
-        }
-      }
-      var value = null;
-      if (chosenTraintest == "split") {
-        value = document.getElementById("splittrain").value;
+    document.getElementById("process-button").addEventListener("click", function () {
+      getInfoFromUrl(function (obj) {
+        obj.chosenMethod = getSelectedValue("choose-method");
+        obj.chosenTraintest = getSelectedValue("choose-traintest");
+        value = document.getElementById("splittest").value;
         if (value == "") {
           value = "20";
         }
-      }
-      setTimeout(function () {
-        var href = "/choosedatatrain" + "/" + chosenData + "/" + chosenImputation + "/" + chosenMethod + "/" + chosenTraintest + "/" + value;
-        window.location.href = href;
-      }, 500);
+        obj.value = value;
+        var href = "/choosedatatrain" + "/" + obj.chosenData + "/" + obj.chosenImputation + "/" + obj.chosenMethod + "/" + obj.chosenTraintest + "/" + obj.value;
+        setTimeout(function () { window.location.href = href; }, 500);
+      })
     })
-  }
+
+    function afterPageLoad() {
+      getInfoFromUrl(function (obj) {
+        if (obj.step == "choosedatatrain") {
+          document.getElementById("accuracy-report").classList.remove("is-hidden");
+        }
+        if (obj.chosenMethod != "") {
+          setSeletedValue("choose-method", obj.chosenMethod);
+          setSeletedValue("choose-traintest", obj.chosenTraintest);
+          document.getElementById("splittest").value = obj.value;
+        }
+      })
+    }
+
+    document.getElementById("classification-button").addEventListener("click", function () {
+      getInfoFromUrl(function (obj) {
+        obj.chosenMethod = getSelectedValue("choose-method");
+        obj.chosenTraintest = getSelectedValue("choose-traintest");
+        value = document.getElementById("splittest").value;
+        if (value == "") {
+          value = "20";
+        }
+        obj.value = value;
+        var href = "/choosedatapredict" + "/" + obj.chosenData + "/" + obj.chosenImputation + "/" + obj.chosenMethod + "/" + obj.chosenTraintest + "/" + obj.value;
+        setTimeout(function () { window.location.href = href; }, 500);
+      })
+    })
+
+    document.getElementById("splittrain").innerHTML = 100 - document.getElementById("splittest").value;
+
+  })
 </script>
 {% endblock %}

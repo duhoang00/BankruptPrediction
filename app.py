@@ -53,6 +53,12 @@ def choosedatatrain(chosendata, chosenimputation, chosenmethod, chosentraintest,
         confusion_matrix, accuracy_score, classification_report = process.decisionTree(X_train, X_test, y_train, y_test)
     elif (chosenmethod == "randomforest"):
         confusion_matrix, accuracy_score, classification_report = process.randomForest(X_train, X_test, y_train, y_test)
+    elif (chosenmethod == "gaussiannb"):
+        confusion_matrix, accuracy_score, classification_report = process.gaussianNB(X_train, X_test, y_train, y_test)
+    elif (chosenmethod == "multinomialnb"):
+        confusion_matrix, accuracy_score, classification_report = process.multinomialNB(X_train, X_test, y_train, y_test)
+    elif (chosenmethod == "bernoullinb"):
+        confusion_matrix, accuracy_score, classification_report = process.bernoulliNB(X_train, X_test, y_train, y_test)
 
     classification_report.__delitem__("accuracy")
 
@@ -77,6 +83,12 @@ def predict(chosendata, chosenimputation, chosenmethod, chosentraintest, value, 
         result = process.decisionTreePredict(X_train, X_test, y_train, y_test, userinput)
     elif (chosenmethod == "randomforest"):
         result = process.randomForestPredict(X_train, X_test, y_train, y_test, userinput)
+    elif (chosenmethod == "gaussiannb"):
+        result = process.gaussianNBPredict(X_train, X_test, y_train, y_test, userinput)
+    elif (chosenmethod == "multinomialnb"):
+        result = process.multinomialNBPredict(X_train, X_test, y_train, y_test, userinput)
+    elif (chosenmethod == "bernoullinb"):
+        result = process.BernoulliNBPredict(X_train, X_test, y_train, y_test, userinput)
     
     return render_template("dataprocess.html", result = result)
 
