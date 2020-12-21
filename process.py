@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn import tree
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, KFold
 from sklearn import metrics
 from sklearn.datasets import load_iris
@@ -14,7 +15,6 @@ import numpy as np
 
 def processData(df_list):
     print('processing data...')
-    # decisionTree(df_list)
 
 
 def kfold(df, k):
@@ -43,29 +43,41 @@ def traintestsplit(df, test_size):
     return  X_train, X_test, y_train, y_test
 
 
+def randomForest(X_train, X_test, y_train, y_test):
+    print('using random forest...')
+    clf = RandomForestClassifier(random_state=99)
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
+    return cal_accuracy(y_test, y_pred)
+
+
+def randomForestPredict(X_train, X_test, y_train, y_test, userinput):
+    print('using radom forest for prediction...')
+    clf = RandomForestClassifier(random_state=99)
+    clf.fit(X_train, y_train)
+    userinputarray =userinput.split(",");
+    x = np.array(userinputarray)
+    y = x.astype(np.float)
+    y_pred = clf.predict([y])
+
+    return y_pred;
+
 
 def decisionTree(X_train, X_test, y_train, y_test):
     print('using decision tree...')
-
     dt = DecisionTreeClassifier(min_samples_split=20, random_state=99)
     dt.fit(X_train, y_train)
-
     y_pred = dt.predict(X_test)
-
     return cal_accuracy(y_test, y_pred)
     
 
 def decisionTreePredict(X_train, X_test, y_train, y_test, userinput):
     print('using decision tree for prediction...')
-
     dt = DecisionTreeClassifier(min_samples_split=20, random_state=99)
     dt.fit(X_train, y_train)
-
     userinputarray =userinput.split(",");
-
     x = np.array(userinputarray)
     y = x.astype(np.float)
-
     y_pred = dt.predict([y])
 
     return y_pred;

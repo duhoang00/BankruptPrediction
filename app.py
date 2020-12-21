@@ -55,6 +55,8 @@ def choosedatatrain(chosendata, chosenimputation, chosenmethod, chosentraintest,
 
     if (chosenmethod == "decisiontree"):
         confusion_matrix, accuracy_score, classification_report = process.decisionTree(X_train, X_test, y_train, y_test)
+    elif (chosenmethod == "randomforest"):
+        confusion_matrix, accuracy_score, classification_report = process.randomForest(X_train, X_test, y_train, y_test)
 
     classification_report.__delitem__("accuracy")
 
@@ -77,6 +79,8 @@ def predict(chosendata, chosenimputation, chosenmethod, chosentraintest, value, 
 
     if (chosenmethod == "decisiontree"):
         result = process.decisionTreePredict(X_train, X_test, y_train, y_test, userinput)
+    elif (chosenmethod == "randomforest"):
+        result = process.randomForestPredict(X_train, X_test, y_train, y_test, userinput)
     
     return render_template("dataprocess.html", result = result)
 

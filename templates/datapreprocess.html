@@ -120,9 +120,29 @@
       }
       if (href[i] == "choosedatatrain") {
         document.getElementById("accuracy-report").classList.remove("is-hidden");
+        chosenMethod = href[i+3];
+        chosenTraintest = href[i+4];
+        value = href[i+5];
+        selectOldOptions(chosenMethod, chosenTraintest, value);
       }
 
     }
+  }
+
+  function selectOldOptions(chosenMethod, chosenTraintest, value) {
+    var chooseMethod = document.getElementById("choose-method").getElementsByTagName("input");
+      for (var i = 0; i < chooseMethod.length; i++) {
+        if (chooseMethod[i].value == chosenMethod) {
+          chooseMethod[i].checked = true;
+        }
+      }
+      var chooseTraintest = document.getElementById("choose-traintest").getElementsByTagName("input");
+      for (var i = 0; i < chooseTraintest.length; i++) {
+        if (chooseTraintest[i].value == chosenTraintest) {
+          chooseTraintest[i].checked = true;
+        }
+      }
+      document.getElementById("splittrain").value = value;
   }
 
   function hadSelected(href, hrefindex) {
