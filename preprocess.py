@@ -38,20 +38,38 @@ def showMissingStats(df_list):
     return missing_stats
 
 
-def showMatrix(df_list):
-    print('show matrix...')
-    datautils.nullity_matrix(df_list)
-
-
-def showHeatMap(df_list):
-    print('show heat map')
-    datautils.nullity_heatmap(df_list)
-
-
 def meanImputation(df_list):
     print("using mean imputation...")
     df_list = datautils.mean_imputation(df_list)
     return df_list
+
+
+def medianImputation(df_list):
+    print("using median imputation...")
+    df_list = datautils.median_imputation(df_list)
+    return df_list
+
+
+def mostFrequentImputation(df_list):
+    print("using most frequent imputation...")
+    df_list = datautils.most_frequent_imputation(df_list)
+    return df_list
+
+
+def constantImputation(df_list):
+    print("using constant imputation...")
+    df_list = datautils.constant_imputation(df_list)
+    return df_list
+
+
+def nullityMatrix(df_list):
+    print("using nullity matrix...")
+    datautils.nullity_matrix(df_list)
+
+
+def nullityHeatmap(df_list):
+    print("using nullity heatmap...")
+    datautils.nullity_heatmap(df_list)
 
 
 def overSampleSmote(df_list):

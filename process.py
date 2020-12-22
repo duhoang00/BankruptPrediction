@@ -60,11 +60,11 @@ def gaussianNBPredict(X_train, X_test, y_train, y_test, userinput):
     print('using Naive Bayes Gaussian NB for prediction...')
     clf = GaussianNB()
     clf.fit(X_train, y_train)
-    userinputarray =userinput.split(",");
+    userinputarray =userinput.split(",")
     x = np.array(userinputarray)
     y = x.astype(np.float)
     y_pred = clf.predict([y])
-    return y_pred;
+    return y_pred
 
 
 def multinomialNB(X_train, X_test, y_train, y_test):
@@ -79,11 +79,11 @@ def multinomialNBPredict(X_train, X_test, y_train, y_test, userinput):
     print('using Naive Bayes Multinomial NB for prediction...')
     clf = MultinomialNB()
     clf.fit(X_train, y_train)
-    userinputarray =userinput.split(",");
+    userinputarray =userinput.split(",")
     x = np.array(userinputarray)
     y = x.astype(np.float)
     y_pred = clf.predict([y])
-    return y_pred;
+    return y_pred
 
 
 def bernoulliNB(X_train, X_test, y_train, y_test):
@@ -98,11 +98,11 @@ def BernoulliNBPredict(X_train, X_test, y_train, y_test, userinput):
     print('using Naive Bayes Bernoulli NB for prediction...')
     clf = BernoulliNB()
     clf.fit(X_train, y_train)
-    userinputarray =userinput.split(",");
+    userinputarray =userinput.split(",")
     x = np.array(userinputarray)
     y = x.astype(np.float)
     y_pred = clf.predict([y])
-    return y_pred;
+    return y_pred
 
 
 def randomForest(X_train, X_test, y_train, y_test):
@@ -117,11 +117,11 @@ def randomForestPredict(X_train, X_test, y_train, y_test, userinput):
     print('using radom forest for prediction...')
     clf = RandomForestClassifier(random_state=99)
     clf.fit(X_train, y_train)
-    userinputarray =userinput.split(",");
+    userinputarray =userinput.split(",")
     x = np.array(userinputarray)
     y = x.astype(np.float)
     y_pred = clf.predict([y])
-    return y_pred;
+    return y_pred
 
 
 def decisionTree(X_train, X_test, y_train, y_test):
@@ -136,12 +136,12 @@ def decisionTreePredict(X_train, X_test, y_train, y_test, userinput):
     print('using decision tree for prediction...')
     dt = DecisionTreeClassifier(min_samples_split=20, random_state=99)
     dt.fit(X_train, y_train)
-    userinputarray =userinput.split(",");
+    userinputarray =userinput.split(",")
     x = np.array(userinputarray)
     y = x.astype(np.float)
     y_pred = dt.predict([y])
 
-    return y_pred;
+    return y_pred
 
 def cal_accuracy(y_test, y_pred):
     confusion_matrix_result = confusion_matrix(y_test, y_pred)

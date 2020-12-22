@@ -4,6 +4,8 @@ import numpy as np
 import missingno as msno
 from sklearn.impute import SimpleImputer
 from imblearn.over_sampling import SMOTE
+import matplotlib.pyplot as plt
+from PIL import Image
 
 import convertutils as util
 
@@ -56,7 +58,8 @@ def nullity_matrix(dataframes, figsize=(20, 5), include_all=False):
     for i in range(len(dataframes)):
         tmp_df = dfs[i] if include_all == True else dfs[i][dfs[i].columns[dfs[i].isna(
         ).any()].tolist()]
-        msno.matrix(tmp_df, labels=True, figsize=figsize, inline=True)
+        map = msno.matrix(tmp_df, labels=True, figsize=figsize, inline=False)
+        map.figure.savefig("nullity_matrix.jpeg")
 
 
 def nullity_heatmap(dataframes, figsize=(20, 20), include_all=False):
@@ -74,13 +77,16 @@ def nullity_heatmap(dataframes, figsize=(20, 20), include_all=False):
     for i in range(len(dataframes)):
         tmp_df = dfs[i] if include_all == True else dfs[i][dfs[i].columns[dfs[i].isna(
         ).any()].tolist()]
-        msno.heatmap(tmp_df, labels=True, figsize=figsize, inline=True)
-
+        map = msno.heatmap(tmp_df, labels=True, figsize=figsize, inline=False)
+        map.figure.savefig("nullity_heatmap.jpeg")
 
 def __sklearn_imputation(dataframes, strategy):
     dfs = util.df_to_dfs(dataframes)
     imp_sklearn_dfs = []
-    sklearn_imputer = SimpleImputer(missing_values=np.nan, strategy=strategy)
+    if (strategy == "constant"):
+        sklearn_imputer = SimpleImputer(missing_values=np.nan, strategy=strategy, fill_value=0)
+    else:
+        sklearn_imputer = SimpleImputer(missing_values=np.nan, strategy=strategy)
     for i in range(len(dfs)):
         imp_sklearn_dfs.append(
             pd.DataFrame(
@@ -100,6 +106,18 @@ def mean_imputation(dataframes):
         list of pandas dataframe: A list of pandas dataframe imputted using mean imputation.
     """
     return __sklearn_imputation(dataframes, "mean")
+
+
+def median_imputation(dataframes):
+    return __sklearn_imputation(dataframes, "median")
+
+
+def most_frequent_imputation(dataframes):
+    return __sklearn_imputation(dataframes, "most_frequent")
+
+
+def constant_imputation(dataframes):
+    return __sklearn_imputation(dataframes, "constant")
 
 
 def oversample_smote(dataframes, sampling_strategy="auto", random_state=40, k=8, columns=None, verbose=False):

@@ -46,12 +46,24 @@
         Mean imputation
       </label>
     </p>
-    <!-- <p>
+    <p>
       <label class="radio">
-        <input type="radio" name="imputation" value="other">  
-        Other imputation
+        <input type="radio" name="imputation" value="medianImp">  
+        Median imputation
       </label>
-    </p> -->
+    </p>
+    <p>
+      <label class="radio">
+        <input type="radio" name="imputation" value="mostFrequentImp">  
+        Most frequent imputation
+      </label>
+    </p>
+    <p>
+      <label class="radio">
+        <input type="radio" name="imputation" value="constantImp">  
+        Constant imputation
+      </label>
+    </p>
 
   </div>
 
@@ -75,9 +87,12 @@
     {{ missingstat|safe }}
     {% endfor %}
   </div>
-
-
-
+  <div class="figure-container">
+    <img src="{{ nullityMatrix }}" alt="nullityMatrix">
+    <img src="{{ nullityHeatmap }}" alt="nullityHeatmap">
+    <!-- <img src="../nullity_matrix.jpeg" alt="nullityMatrix"> -->
+    <!-- <img src="../nullity_heatmap.jpeg" alt="nullityHeatmap"> -->
+  </div>
 </div>
 
 <script>
@@ -128,7 +143,7 @@
       var chooseImputation = document.getElementById("choose-imputation").getElementsByTagName("input");
       for (var i = 0; i < chooseImputation.length; i++) {
         console.log(chooseImputation[i].value)
-        if (chooseImputation[i].value = chosenImputation && chosenImputation != "null") {
+        if (chooseImputation[i].value == chosenImputation && chosenImputation != "null") {
           console.log('2')
           chooseImputation[i].checked = true;
         }

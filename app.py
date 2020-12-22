@@ -6,6 +6,7 @@ from flask import Flask, render_template, request
 from scipy.io import arff
 from io import StringIO
 import main, preprocess, process
+from PIL import Image
 
 app=Flask(__name__)
 
@@ -22,9 +23,13 @@ def about():
 @app.route('/datainput', methods=['GET', 'POST'])
 def datainput():
     df, Df_missing_stats = preProcessData("1year", "null", False)
+    nullityMatrix = Image.open("./nullity_matrix.jpeg")
+    nullityHeatmap = Image.open("./nullity_heatmap.jpeg")
     return render_template("datainput.html", 
         tables=[df.to_html(classes='table', header="true")], 
-        missingstats = [Df_missing_stats.to_html(classes="table missing-stats", header="true")])
+        missingstats = [Df_missing_stats.to_html(classes="table missing-stats", header="true")],
+        nullityMatrix = nullityMatrix,
+        nullityHeatmap = nullityHeatmap)
 
 
 @app.route('/choosedata/<string:chosendata>/<string:chosenimputation>', methods=['GET', 'POST'])
@@ -99,9 +104,19 @@ def predict(chosendata, chosenimputation, chosenmethod, chosentraintest, value, 
 
 def preProcessData(chosendata, chosenimputation, smote):
     arrfurl = chosendata + ".arff"
-    rawDfList = main.getRawDfList(arrfurl);
+    rawDfList = main.getRawDfList(arrfurl)
+    preprocess.nullityMatrix(rawDfList)
+    preprocess.nullityHeatmap(rawDfList)
     if (chosenimputation != "null"):
-        rawDfList = preprocess.meanImputation(rawDfList)
+        if (chosenimputation == "meanImp"):
+            rawDfList = preprocess.meanImputation(rawDfList)
+        elif (chosenimputation == "medianImp"):
+            rawDfList = preprocess.medianImputation(rawDfList)
+        elif (chosenimputation == "mostFrequentImp"):
+            rawDfList = preprocess.mostFrequentImputation(rawDfList)
+        elif (chosenimputation == "constantImp"):
+            rawDfList = preprocess.constantImputation(rawDfList)
+        
     if (smote == True):
         rawDfList = preprocess.overSampleSmote(rawDfList)
     # rawDfList[0] = rawDfList[0][rawDfList[0]['Attr1'] > 0.3]  # less value for dataframe
@@ -116,4 +131,4 @@ def not_found(e):
 
 if __name__=="__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    app.run(host='localhost', port=port, debug=True)
