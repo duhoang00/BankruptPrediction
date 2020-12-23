@@ -23,18 +23,16 @@ def about():
 @app.route('/datainput', methods=['GET', 'POST'])
 def datainput():
     df, Df_missing_stats = preProcessData("1year", "null", False)
-    nullityMatrix = Image.open("./nullity_matrix.jpeg")
-    nullityHeatmap = Image.open("./nullity_heatmap.jpeg")
+    update_df = df.head(50)
     return render_template("datainput.html", 
-        tables=[df.to_html(classes='table', header="true")], 
-        missingstats = [Df_missing_stats.to_html(classes="table missing-stats", header="true")],
-        nullityMatrix = nullityMatrix,
-        nullityHeatmap = nullityHeatmap)
+        tables=[update_df.to_html(classes='table', header="true")], 
+        missingstats = [Df_missing_stats.to_html(classes="table missing-stats", header="true")])
 
 
 @app.route('/choosedata/<string:chosendata>/<string:chosenimputation>', methods=['GET', 'POST'])
 def chooseData(chosendata, chosenimputation):
     df, Df_missing_stats = preProcessData(chosendata, chosenimputation, False)
+    update_df = df.head(50)
     return render_template("datainput.html", 
         tables=[df.to_html(classes='table', header="true")], 
         missingstats = [Df_missing_stats.to_html(classes="table missing-stats", header="true")])
@@ -103,10 +101,9 @@ def predict(chosendata, chosenimputation, chosenmethod, chosentraintest, value, 
 
 
 def preProcessData(chosendata, chosenimputation, smote):
+    print('preprocess data ' + chosendata + ' with ' + chosenimputation + ' and ' + str(smote) + ' smote')
     arrfurl = chosendata + ".arff"
     rawDfList = main.getRawDfList(arrfurl)
-    preprocess.nullityMatrix(rawDfList)
-    preprocess.nullityHeatmap(rawDfList)
     if (chosenimputation != "null"):
         if (chosenimputation == "meanImp"):
             rawDfList = preprocess.meanImputation(rawDfList)
@@ -116,13 +113,18 @@ def preProcessData(chosendata, chosenimputation, smote):
             rawDfList = preprocess.mostFrequentImputation(rawDfList)
         elif (chosenimputation == "constantImp"):
             rawDfList = preprocess.constantImputation(rawDfList)
-        
+    else:
+        processFig(rawDfList)
     if (smote == True):
         rawDfList = preprocess.overSampleSmote(rawDfList)
-    # rawDfList[0] = rawDfList[0][rawDfList[0]['Attr1'] > 0.3]  # less value for dataframe
     Df_missing_stats = main.getMissingStats(rawDfList)
     return  rawDfList[0], Df_missing_stats
 
+
+def processFig(rawDfList):
+    print('processFig with length = ' + str(len(rawDfList[0].index)))
+    preprocess.nullityMatrix(rawDfList)
+    preprocess.nullityHeatmap(rawDfList)
 
 @app.errorhandler(404)
 def not_found(e):

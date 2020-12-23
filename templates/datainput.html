@@ -9,31 +9,31 @@
     <p>
       <label class="radio">
         <input type="radio" name="yeardata" value="1year" checked>
-        Các chỉ số tài chính của năm tài chính thứ I và lớp tương ứng chỉ ra kết quả phá sản sau 5 năm
+        Các chỉ số tài chính của năm tài chính thứ I và lớp tương ứng chỉ ra kết quả phá sản sau 5 năm (7027 mẫu)
       </label>
     </p>
     <p>
       <label class="radio">
         <input type="radio" name="yeardata" value="2year">
-        Các chỉ số tài chính của năm tài chính thứ II và lớp tương ứng chỉ ra kết quả phá sản sau 4 năm
+        Các chỉ số tài chính của năm tài chính thứ II và lớp tương ứng chỉ ra kết quả phá sản sau 4 năm (10173 mẫu)
       </label>
     </p>
     <p>
       <label class="radio">
         <input type="radio" name="yeardata" value="3year">
-        Các chỉ số tài chính của năm tài chính thứ III và lớp tương ứng chỉ ra kết quả phá sản sau 3 năm
+        Các chỉ số tài chính của năm tài chính thứ III và lớp tương ứng chỉ ra kết quả phá sản sau 3 năm (10503 mẫu)
       </label>
     </p>
     <p>
       <label class="radio">
         <input type="radio" name="yeardata" value="4year">
-        Các chỉ số tài chính của năm tài chính thứ IV và lớp tương ứng chỉ ra kết quả phá sản sau 2 năm
+        Các chỉ số tài chính của năm tài chính thứ IV và lớp tương ứng chỉ ra kết quả phá sản sau 2 năm (9792 mẫu)
       </label>
     </p>
     <p>
       <label class="radio">
         <input type="radio" name="yeardata" value="5year">
-        Các chỉ số tài chính của năm tài chính thứ V và lớp tương ứng chỉ ra kết quả phá sản sau 1 năm
+        Các chỉ số tài chính của năm tài chính thứ V và lớp tương ứng chỉ ra kết quả phá sản sau 1 năm (5910 mẫu)
       </label>
     </p>
   </div>
@@ -72,6 +72,7 @@
   </p>
 
   <div class="title">Dữ liệu</div>
+  <div class="is-size-7">(Hiển thị 50 dòng đầu tiên)</div>
   <div class="table-container" style="max-height: 300px; overflow: auto;">
     {% for table in tables %}
     {{ table|safe }}
@@ -82,16 +83,16 @@
   <button class="button is-dark mb-3" id="process-button">Sử dụng dữ liệu này</button>
 
   <div class="title">Phân tích dữ liệu</div>
-  <div class="missing-stats-container">
+  <div class="missing-stats-container mb-3">
     {% for missingstat in missingstats %}
     {{ missingstat|safe }}
     {% endfor %}
   </div>
-  <div class="figure-container">
-    <img src="{{ nullityMatrix }}" alt="nullityMatrix">
-    <img src="{{ nullityHeatmap }}" alt="nullityHeatmap">
-    <!-- <img src="../nullity_matrix.jpeg" alt="nullityMatrix"> -->
-    <!-- <img src="../nullity_heatmap.jpeg" alt="nullityHeatmap"> -->
+  <div class="figure-container" id="figure-container">
+    <div class="subtitle">Nullity Matrix</div>
+    <img src="{{url_for('static', filename='nullity_matrix.jpeg')}}" alt="nullityMatrix">
+    <div class="subtitle">Nullity Heatmap</div>
+    <img src="{{url_for('static', filename='nullity_heatmap.jpeg')}}" alt="nullityMatrix">
   </div>
 </div>
 
@@ -120,6 +121,9 @@
       for (var i = 0; i < href.length; i++) {
         if (href[i] == "choosedata") {
           hadSelected(href, i);
+          if (href[i + +2] != "null") {
+            document.getElementById("figure-container").classList.add("is-hidden");
+          }
           break;
         }
       }

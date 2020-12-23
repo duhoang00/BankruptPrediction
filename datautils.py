@@ -6,6 +6,7 @@ from sklearn.impute import SimpleImputer
 from imblearn.over_sampling import SMOTE
 import matplotlib.pyplot as plt
 from PIL import Image
+import os
 
 import convertutils as util
 
@@ -59,7 +60,8 @@ def nullity_matrix(dataframes, figsize=(20, 5), include_all=False):
         tmp_df = dfs[i] if include_all == True else dfs[i][dfs[i].columns[dfs[i].isna(
         ).any()].tolist()]
         map = msno.matrix(tmp_df, labels=True, figsize=figsize, inline=False)
-        map.figure.savefig("nullity_matrix.jpeg")
+        # map.figure.savefig("nullity_matrix.jpeg")
+        map.figure.savefig(os.path.join(figPath(), 'nullity_matrix.jpeg'))
 
 
 def nullity_heatmap(dataframes, figsize=(20, 20), include_all=False):
@@ -78,7 +80,9 @@ def nullity_heatmap(dataframes, figsize=(20, 20), include_all=False):
         tmp_df = dfs[i] if include_all == True else dfs[i][dfs[i].columns[dfs[i].isna(
         ).any()].tolist()]
         map = msno.heatmap(tmp_df, labels=True, figsize=figsize, inline=False)
-        map.figure.savefig("nullity_heatmap.jpeg")
+        # map.figure.savefig("nullity_heatmap.jpeg")
+        map.figure.savefig(os.path.join(figPath(), 'nullity_heatmap.jpeg'))
+
 
 def __sklearn_imputation(dataframes, strategy):
     dfs = util.df_to_dfs(dataframes)
@@ -165,3 +169,9 @@ def oversample_smote(dataframes, sampling_strategy="auto", random_state=40, k=8,
 
     # return oversampled dataframes
     return oversampled_dfs
+
+
+def figPath():
+    path = os.getcwd() 
+    return path  + "/static"
+
