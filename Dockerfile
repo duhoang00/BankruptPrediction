@@ -11,5 +11,9 @@ ADD ./ /opt/
 WORKDIR /opt
 
 RUN conda install scikit-learn
+RUN conda install scipy
+RUN conda install imblearn
+RUN conda install graphviz
+RUN conda install missingno
 
 CMD python app.py

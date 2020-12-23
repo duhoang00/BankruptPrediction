@@ -1,8 +1,8 @@
 arff
 pandas
 flask
-scipy
-missingno
+# scipy
+# missingno
 # sklearn
-imblearn
-graphviz
+# imblearn
+# graphviz
