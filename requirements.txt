@@ -3,6 +3,6 @@ pandas
 flask
 scipy
 missingno
-sklearn
+# sklearn
 imblearn
 graphviz
