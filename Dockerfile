@@ -10,10 +10,10 @@ RUN pip install -qr /tmp/requirements.txt
 ADD ./ /opt/
 WORKDIR /opt
 
-RUN conda install scikit-learn
-RUN conda install scipy
-RUN conda install imblearn
-RUN conda install graphviz
-RUN conda install missingno
+RUN conda install -c anaconda scikit-learn
+RUN conda install -c anaconda scipy
+RUN conda install -c conda-forge imbalanced-learn
+RUN conda install -c anaconda graphviz
+RUN conda install -c conda-forge missingno
 
 CMD python app.py
