@@ -69,6 +69,7 @@
 
   <p class="mb-3">
     <button class="button is-dark" id="preprocess-button">Tiền xử lí</button>
+    <button class="button" id="del-preprocess-button">Xóa tiền xử lí</button>
   </p>
 
   <div class="title">Dữ liệu</div>
@@ -124,6 +125,7 @@
           if (href[i + +2] != "null") {
             document.getElementById("figure-container").classList.add("is-hidden");
           }
+          delPreprocessEvent(href[i+1]);
           break;
         }
       }
@@ -152,6 +154,15 @@
           chooseImputation[i].checked = true;
         }
       }
+    }
+
+    function delPreprocessEvent(chosenData) {
+      document.getElementById("del-preprocess-button").addEventListener("click", function() {
+        setTimeout(function () {
+          var href = /* window.location.host + */ "/choosedata" + "/" + chosenData + "/" + null;
+          window.location.href = href;
+        }, 500);
+      })
     }
 
     function preprocessEvent() {
