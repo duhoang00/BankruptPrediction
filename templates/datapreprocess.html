@@ -3,89 +3,107 @@
 {% block title %}Trang chủ{% endblock %}
 
 {% block pagecontent %}
-<div class="title">Chọn phương pháp</div>
-<div class="method-container mb-3" id="choose-method">
-  <p>
-    <label class="radio">
-      <input type="radio" name="method" value="decisiontree" checked>
-      Decision tree
-    </label>
-  </p>
-  <p>
-    <label class="radio">
-      <input type="radio" name="method" value="randomforest">
-      Random forest
-    </label>
-  </p>
-  <p>
-    <label class="radio">
-      <input type="radio" name="method" value="gaussiannb">
-      Naive Bayes GaussianNB
-    </label>
-  </p>
-  <!-- <p>
+<div class="columns">
+  <div class="column is-half">
+    <div class="title">Chọn phương pháp</div>
+    <div class="method-container mb-3" id="choose-method">
+      <p>
+        <label class="radio">
+          <input type="radio" name="method" value="decisiontree" checked>
+          Decision tree
+        </label>
+      </p>
+      <p>
+        <label class="radio">
+          <input type="radio" name="method" value="randomforest">
+          Random forest
+        </label>
+      </p>
+      <p>
+        <label class="radio">
+          <input type="radio" name="method" value="gaussiannb">
+          Naive Bayes GaussianNB
+        </label>
+      </p>
+      <!-- <p>
     <label class="radio">
       <input type="radio" name="method" value="multinomialnb">
       Naive Bayes MultinomialNB
     </label>
   </p> -->
-  <p>
-    <label class="radio">
-      <input type="radio" name="method" value="bernoullinb">
-      Naive Bayes BernoulliNB
-    </label>
-  </p>
-</div>
+      <p>
+        <label class="radio">
+          <input type="radio" name="method" value="bernoullinb">
+          Naive Bayes BernoulliNB
+        </label>
+      </p>
+    </div>
 
-<div class="title">Phương pháp training và đánh giá</div>
-<div class="train-test-container mb-3" id="choose-traintest">
-  <div>
-    <label class="radio">
-      <input type="radio" name="traintest" value="split" checked>
-      Train/Test Split
-    </label>
-    <span class="ml-5">Test:</span>
-    <span>
-      <input id="splittest" class="input is-small" style="width: 5%;" type="number" min="0" max="100"
-        placeholder="Test">%
-    </span>
-    <span>, Train:</span>
-    <span id="splittrain"></span>%
+    <div class="title">Phương pháp training và đánh giá</div>
+    <div class="train-test-container mb-3" id="choose-traintest">
+      <div>
+        <label class="radio">
+          <input type="radio" name="traintest" value="split" checked>
+          Train/Test Split
+        </label>
+        <span class="ml-5">Test:</span>
+        <span>
+          <input id="splittest" class="input is-small" style="width: 5%;" type="number" min="0" max="100"
+            placeholder="Test">%
+        </span>
+        <span>, Train:</span>
+        <span id="splittrain"></span>%
+      </div>
+      <div>
+        <label class="radio">
+          <input type="radio" name="traintest" value="kfold" checked>
+          KFold
+        </label>
+        <span class="ml-5">Folds:</span>
+        <span>
+          <input id="folds" class="input is-small" style="width: 5%;" type="number" min="0" max="100"
+            placeholder="Folds">
+        </span>
+      </div>
+    </div>
+    <p class="mb-3">
+      <button class="button is-dark" id="process-button">Xử lí</button>
+    </p>
   </div>
-  <div>
-    <label class="radio">
-      <input type="radio" name="traintest" value="kfold" checked>
-      KFold
-    </label>
-    <span class="ml-5">Folds:</span>
-    <span>
-      <input id="folds" class="input is-small" style="width: 5%;" type="number" min="0" max="100" placeholder="Folds">
-    </span>
+
+  <div class="column">
+    <div class="title">Phương pháp</div>
+    <div>Random Forest</div>
+    <div class="title">Phương pháp training và đánh giá</div>
+    <div class="mb-3">Train/Test Split Test: 20%, Train: 80%</div>
+    <p class="mb-3">
+      <button class="button is-dark is-large" id="process-fast-button">Xử lí nhanh</button>
+    </p>
   </div>
 </div>
-
-<p class="mb-3">
-  <button class="button is-dark" id="process-button">Xử lí</button>
-  <button class="button" id="process-fast-button">Xử lí nhanh (Sử dụng 29 thuộc tính, test là 20%, phương pháp là Random
-    Forest)</button>
-</p>
 
 <div class="accuracy is-hidden mb-3" id="accuracy-report">
-  <div class="title">Confusion Matrix</div>
-  <div>
-    <table class="table">
-      {%for row in confusion_matrix%}
-      <tr>
-        {%for col in row%}
-        <td>{{ col }}</td>
-        {%endfor%}
-      </tr>
-      {%endfor%}
-    </table>
-  </div>
+  <div class="columns">
+    <div class="column">
+      <div class="title">Confusion Matrix</div>
+      <div>
+        <table class="table">
+          {%for row in confusion_matrix%}
+          <tr>
+            {%for col in row%}
+            <td>{{ col }}</td>
+            {%endfor%}
+          </tr>
+          {%endfor%}
+        </table>
+      </div>
+    </div>
 
-  <div class="title">Accuracy Score</div>
-  <div>{{accuracy_score}}</div>
+    <div class="column">
+      <div class="title">Accuracy Score</div>
+      <div>{{accuracy_score}}</div>
+    </div>
+  </div>
 
   <div class="title">Classification Report</div>
   <div class="table-container" style="max-height: 300px; overflow: auto;">
