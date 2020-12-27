@@ -23,7 +23,7 @@ def about():
 @app.route('/datainput', methods=['GET', 'POST'])
 def datainput():
     df, Df_missing_stats = preProcessData("1year", "null", False)
-    update_df = df.head(50)
+    update_df = df.head(20)
     return render_template("datainput.html", 
         tables=[update_df.to_html(classes='table', header="true")], 
         missingstats = [Df_missing_stats.to_html(classes="table missing-stats", header="true")])
@@ -32,7 +32,7 @@ def datainput():
 @app.route('/choosedata/<string:chosendata>/<string:chosenimputation>', methods=['GET', 'POST'])
 def chooseData(chosendata, chosenimputation):
     df, Df_missing_stats = preProcessData(chosendata, chosenimputation, False)
-    update_df = df.head(50)
+    update_df = df.head(20)
     return render_template("datainput.html", 
         tables=[update_df.to_html(classes='table', header="true")], 
         missingstats = [Df_missing_stats.to_html(classes="table missing-stats", header="true")])
@@ -48,31 +48,22 @@ def datapreprocess(chosendata, chosenimputation):
 
 @app.route('/choosedatatrain/<string:chosendata>/<string:chosenimputation>/<string:chosenmethod>/<string:chosentraintest>/<int:value>', methods=['GET', 'POST'])
 def choosedatatrain(chosendata, chosenimputation, chosenmethod, chosentraintest, value):
-    df, Df_missing_stats = preProcessData(chosendata, chosenimputation, True)
-    if (chosentraintest == "split"):
-        X_train, X_test, y_train, y_test = process.traintestsplit(df, value)
-    if (chosentraintest == "kfold"):
-        X_train, X_test, y_train, y_test = process.kfold(df, value)
-
-    if (chosenmethod == "decisiontree"):
-        confusion_matrix, accuracy_score, classification_report = process.decisionTree(X_train, X_test, y_train, y_test)
-    elif (chosenmethod == "randomforest"):
-        confusion_matrix, accuracy_score, classification_report = process.randomForest(X_train, X_test, y_train, y_test)
-    elif (chosenmethod == "gaussiannb"):
-        confusion_matrix, accuracy_score, classification_report = process.gaussianNB(X_train, X_test, y_train, y_test)
-    elif (chosenmethod == "multinomialnb"):
-        confusion_matrix, accuracy_score, classification_report = process.multinomialNB(X_train, X_test, y_train, y_test)
-    elif (chosenmethod == "bernoullinb"):
-        confusion_matrix, accuracy_score, classification_report = process.bernoulliNB(X_train, X_test, y_train, y_test)
-
-    classification_report.__delitem__("accuracy")
-
-    return render_template("datapreprocess.html", 
+    confusion_matrix, accuracy_score, classification_report = processAcc(chosendata, chosenimputation, chosenmethod, chosentraintest, value, fast=False)
+    return render_template("datapreprocess.html",
         confusion_matrix = confusion_matrix, 
         accuracy_score = accuracy_score, 
         classification_report = classification_report)
 
 
+@app.route('/choosedatatrainfast/<string:chosendata>/<string:chosenimputation>/<string:chosenmethod>/<string:chosentraintest>/<int:value>', methods=['GET', 'POST'])
+def choosedatatrainfast(chosendata, chosenimputation, chosenmethod, chosentraintest, value):
+    confusion_matrix, accuracy_score, classification_report = processAcc(chosendata, chosenimputation, chosenmethod, chosentraintest, value, fast=True)
+    return render_template("datapreprocess.html",
+        confusion_matrix = confusion_matrix, 
+        accuracy_score = accuracy_score, 
+        classification_report = classification_report)
+
+@app.route('/choosedatapredictfast/<string:chosendata>/<string:chosenimputation>/<string:chosenmethod>/<string:chosentraintest>/<int:value>', methods=['GET', 'POST'])
 @app.route('/choosedatapredict/<string:chosendata>/<string:chosenimputation>/<string:chosenmethod>/<string:chosentraintest>/<int:value>', methods=['GET', 'POST'])
 def choosedatapredict(chosendata, chosenimputation, chosenmethod, chosentraintest, value):
     return render_template("dataprocess.html")
@@ -100,6 +91,14 @@ def predict(chosendata, chosenimputation, chosenmethod, chosentraintest, value, 
     return render_template("dataprocess.html", result = result)
 
 
+@app.route('/predictfast/<string:chosendata>/<string:chosenimputation>/<string:chosenmethod>/<string:chosentraintest>/<int:value>/<string:userinput>', methods=['GET', 'POST'])
+def predictFast(chosendata, chosenimputation, chosenmethod, chosentraintest, value, userinput):
+    df, Df_missing_stats = preProcessData(chosendata, chosenimputation, True)
+    result = main.fastPredict(df, userinput)
+    return render_template("dataprocess.html", result = result)
+
+
+
 def preProcessData(chosendata, chosenimputation, smote):
     print('preprocess data ' + chosendata + ' with ' + chosenimputation + ' and ' + str(smote) + ' smote')
     arrfurl = chosendata + ".arff"
@@ -125,6 +124,36 @@ def processFig(rawDfList):
     print('processFig with length = ' + str(len(rawDfList[0].index)))
     preprocess.nullityMatrix(rawDfList)
     preprocess.nullityHeatmap(rawDfList)
+
+
+def processAcc(chosendata, chosenimputation, chosenmethod, chosentraintest, value, fast):
+    df, Df_missing_stats = preProcessData(chosendata, chosenimputation, True)
+    if fast == True:
+        print('make it fast')
+        confusion_matrix, accuracy_score, classification_report = main.fastTrain(df)
+    else:
+        if (chosentraintest == "split"):
+            X_train, X_test, y_train, y_test = process.traintestsplit(df, value)
+        if (chosentraintest == "kfold"):
+            X_train, X_test, y_train, y_test = process.kfold(df, value)
+
+        if (chosenmethod == "decisiontree"):
+            confusion_matrix, accuracy_score, classification_report = process.decisionTree(X_train, X_test, y_train, y_test)
+        elif (chosenmethod == "randomforest"):
+            confusion_matrix, accuracy_score, classification_report = process.randomForest(X_train, X_test, y_train, y_test)
+        elif (chosenmethod == "gaussiannb"):
+            confusion_matrix, accuracy_score, classification_report = process.gaussianNB(X_train, X_test, y_train, y_test)
+        elif (chosenmethod == "multinomialnb"):
+            confusion_matrix, accuracy_score, classification_report = process.multinomialNB(X_train, X_test, y_train, y_test)
+        elif (chosenmethod == "bernoullinb"):
+            confusion_matrix, accuracy_score, classification_report = process.bernoulliNB(X_train, X_test, y_train, y_test)
+
+    classification_report.__delitem__("accuracy")
+
+    
+
+    return  confusion_matrix, accuracy_score, classification_report
+
 
 @app.errorhandler(404)
 def not_found(e):

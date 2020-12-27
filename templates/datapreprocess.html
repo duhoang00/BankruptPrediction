@@ -59,14 +59,15 @@
     </label>
     <span class="ml-5">Folds:</span>
     <span>
-      <input id="folds" class="input is-small" style="width: 5%;" type="number" min="0" max="100"
-        placeholder="Folds">
+      <input id="folds" class="input is-small" style="width: 5%;" type="number" min="0" max="100" placeholder="Folds">
     </span>
   </div>
 </div>
 
 <p class="mb-3">
   <button class="button is-dark" id="process-button">Xử lí</button>
+  <button class="button" id="process-fast-button">Xử lí nhanh (Sử dụng 29 thuộc tính, test là 20%, phương pháp là Random
+    Forest)</button>
 </p>
 
 <div class="accuracy is-hidden mb-3" id="accuracy-report">
@@ -89,12 +90,12 @@
   <div class="title">Classification Report</div>
   <div class="table-container" style="max-height: 300px; overflow: auto;">
     <table class="table">
-      
+
       {% for key, values in classification_report.items() %}
       <tr>
         <td>{{ key }}</td>
         <td>{{ values }}</td>
-        
+
       </tr>
       {% endfor%}
     </table>
@@ -133,7 +134,7 @@
       var href = window.location.href;
       var href = href.split("/");
       var result = {
-        'step':'',
+        'step': '',
         'chosenData': '',
         'chosenImputation': '',
         'chosenMethod': '',
@@ -189,9 +190,23 @@
       })
     })
 
+    document.getElementById("process-fast-button").addEventListener("click", function () {
+      getInfoFromUrl(function (obj) {
+        obj.chosenMethod = getSelectedValue("choose-method");
+        obj.chosenTraintest = getSelectedValue("choose-traintest");
+        value = getMethodValue(obj.chosenTraintest);
+        if (value == "") {
+          value = "20";
+        }
+        obj.value = value;
+        var href = "/choosedatatrainfast" + "/" + obj.chosenData + "/" + obj.chosenImputation + "/" + obj.chosenMethod + "/" + obj.chosenTraintest + "/" + obj.value;
+        setTimeout(function () { window.location.href = href; }, 500);
+      })
+    })
+
     function afterPageLoad() {
       getInfoFromUrl(function (obj) {
-        if (obj.step == "choosedatatrain") {
+        if (obj.step == "choosedatatrain" || obj.step == "choosedatatrainfast") {
           document.getElementById("accuracy-report").classList.remove("is-hidden");
         }
         if (obj.chosenMethod != "") {
@@ -211,7 +226,12 @@
           value = "20";
         }
         obj.value = value;
-        var href = "/choosedatapredict" + "/" + obj.chosenData + "/" + obj.chosenImputation + "/" + obj.chosenMethod + "/" + obj.chosenTraintest + "/" + obj.value;
+        if (obj.step == "choosedatatrain") {
+          var href = "/choosedatapredict" + "/" + obj.chosenData + "/" + obj.chosenImputation + "/" + obj.chosenMethod + "/" + obj.chosenTraintest + "/" + obj.value;
+        }
+        else {
+          var href = "/choosedatapredictfast" + "/" + obj.chosenData + "/" + obj.chosenImputation + "/" + obj.chosenMethod + "/" + obj.chosenTraintest + "/" + obj.value;
+        }
         setTimeout(function () { window.location.href = href; }, 500);
       })
     })

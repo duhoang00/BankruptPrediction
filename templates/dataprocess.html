@@ -113,14 +113,19 @@
             var href = window.location.href;
             var href = href.split("/");
 
+            step = href[3]
             chosenData = href[4];
             chosenImputation = href[5];
             chosenMethod = href[6];
             chosenTraintest = href[7];
             value = href[8];
 
-            setTimeout(function () {
+            if (step == "choosedatapredict") {
                 var href = "/predict" + "/" + chosenData + "/" + chosenImputation + "/" + chosenMethod + "/" + chosenTraintest + "/" + value + "/" + userinput;
+            } else {
+                var href = "/predictfast" + "/" + chosenData + "/" + chosenImputation + "/" + chosenMethod + "/" + chosenTraintest + "/" + value + "/" + userinput;
+            }
+            setTimeout(function () {
                 window.location.href = href;
             }, 500);
         })
