@@ -34,7 +34,7 @@ def chooseData(chosendata, chosenimputation):
     df, Df_missing_stats = preProcessData(chosendata, chosenimputation, False)
     update_df = df.head(50)
     return render_template("datainput.html", 
-        tables=[df.to_html(classes='table', header="true")], 
+        tables=[update_df.to_html(classes='table', header="true")], 
         missingstats = [Df_missing_stats.to_html(classes="table missing-stats", header="true")])
 
 
@@ -118,7 +118,7 @@ def preProcessData(chosendata, chosenimputation, smote):
     if (smote == True):
         rawDfList = preprocess.overSampleSmote(rawDfList)
     Df_missing_stats = main.getMissingStats(rawDfList)
-    return  rawDfList[0], Df_missing_stats
+    return  rawDfList[0], Df_missing_stats    
 
 
 def processFig(rawDfList):
@@ -133,4 +133,4 @@ def not_found(e):
 
 if __name__=="__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=True)

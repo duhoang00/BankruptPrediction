@@ -1,8 +1,5 @@
+import numpy as np
 import datautils, convertutils
-
-
-# if (bool(isFlask) == True):
-    # datautils = __import__('utils')
 
 
 def getDfList(arrfurl):
@@ -70,6 +67,10 @@ def nullityMatrix(df_list):
 def nullityHeatmap(df_list):
     print("using nullity heatmap...")
     datautils.nullity_heatmap(df_list)
+
+
+def standardization(x):
+    return ((x - np.mean(x)) / np.std(x))
 
 
 def overSampleSmote(df_list):

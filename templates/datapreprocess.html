@@ -89,20 +89,12 @@
   <div class="title">Classification Report</div>
   <div class="table-container" style="max-height: 300px; overflow: auto;">
     <table class="table">
-      <tr>
-        <td></td>
-        <td>Precision</td>
-        <td>Recall</td>
-        <td>F1 Score (F-Measure)</td>
-        <td>Support</td>
-      </tr>
+      
       {% for key, values in classification_report.items() %}
       <tr>
         <td>{{ key }}</td>
-        <td>{{ values.precision }}</td>
-        <td>{{ values.recall }}</td>
-        <td>{{ values.f1score }}</td>
-        <td>{{ values.support }}</td>
+        <td>{{ values }}</td>
+        
       </tr>
       {% endfor%}
     </table>
